@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>픽셀 서울 — SEOULFIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f7f4;--fg:#0a0a0a;--blue:#1a56ff;--blue-dim:rgba(26,86,255,.08);--border:rgba(10,10,10,.1);--f-disp:'Bebas Neue',sans-serif;--f-body:'Noto Sans KR',sans-serif;--f-mono:'DM Mono',monospace}
+html,body{background:var(--bg);color:var(--fg);font-family:var(--f-body);min-height:100vh;cursor:none;overflow-x:hidden}
+#cr{position:fixed;top:0;left:0;z-index:9999;width:28px;height:28px;border:1.5px solid var(--fg);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-radius .22s,border-color .22s,background .22s;mix-blend-mode:multiply}
+#cd{position:fixed;top:0;left:0;z-index:10000;width:5px;height:5px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
+.ch #cr{width:48px;height:48px;border-color:var(--blue);background:var(--blue-dim);border-radius:4px}
+#reveal{position:fixed;inset:0;z-index:5000;background:var(--fg);transform-origin:top;animation:revealOut .6s cubic-bezier(.76,0,.24,1) .1s forwards}
+@keyframes revealOut{0%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+#trans{position:fixed;inset:0;z-index:6000;background:var(--fg);transform:scaleY(0);transform-origin:bottom;pointer-events:none}
+#trans.go{animation:transGo .55s cubic-bezier(.76,0,.24,1) forwards}
+@keyframes transGo{to{transform:scaleY(1)}}
+#trans-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--f-disp);font-size:1.8rem;letter-spacing:.2em;color:#fff;opacity:0;transition:opacity .2s .25s}
+#trans.go #trans-lbl{opacity:1}
+
+header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(248,247,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.hd-logo{font-family:var(--f-disp);font-size:1.2rem;letter-spacing:.2em;color:var(--fg);text-decoration:none}
+.hd-logo em{color:var(--blue);font-style:normal}
+.hd-back{font-family:var(--f-mono);font-size:.52rem;letter-spacing:.15em;color:rgba(10,10,10,.4);background:none;border:none;cursor:none;transition:color .2s;display:flex;align-items:center;gap:8px}
+.hd-back:hover{color:var(--fg)}
+.hd-tag{font-family:var(--f-mono);font-size:.48rem;letter-spacing:.15em;color:var(--blue);text-transform:uppercase}
+
+.hero{padding:130px 12vw 60px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.hero-title{font-family:var(--f-disp);font-size:clamp(4rem,8vw,9rem);line-height:.88;letter-spacing:-.01em}
+.hero-title em{color:var(--blue);font-style:normal}
+.hero-sub{font-size:.75rem;line-height:2;color:rgba(10,10,10,.45);max-width:260px;letter-spacing:.02em}
+.divider{height:1px;background:var(--border);margin:0 12vw}
+
+/* game screen */
+.game-wrap{padding:52px 12vw 0;display:grid;grid-template-columns:1fr 360px;gap:52px;align-items:start}
+@media(max-width:900px){.game-wrap{grid-template-columns:1fr;padding:40px 6vw 0}.hero{padding:120px 6vw 48px}}
+
+.game-screen{
+  background:var(--fg);
+  aspect-ratio:16/9;position:relative;overflow:hidden;
+  border:none;
+}
+.g-scanlines{position:absolute;inset:0;z-index:5;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none}
+.g-vignette{position:absolute;inset:0;z-index:4;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.4) 100%);pointer-events:none}
+.g-ui{position:absolute;top:0;left:0;right:0;z-index:6;height:26px;background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;padding:0 12px;gap:12px}
+.g-ui span{font-family:var(--f-mono);font-size:.4rem;letter-spacing:.07em;color:rgba(255,255,255,.3)}
+.g-ui .ghp{color:#ff4444}.g-ui .gbl{color:var(--blue)}.g-ui .gloc{color:rgba(255,255,255,.5);margin-left:auto}
+.g-dialog{position:absolute;bottom:0;left:0;right:0;z-index:6;background:rgba(0,0,0,.75);border-top:1px solid rgba(255,255,255,.08);padding:10px 14px;min-height:52px}
+.g-dialog-name{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.1em;color:var(--blue);margin-bottom:4px}
+.g-dialog-text{font-size:.62rem;line-height:1.6;color:rgba(255,255,255,.65)}
+
+/* pixel city scene */
+.g-sky{position:absolute;top:26px;left:0;right:0;height:45%;background:linear-gradient(to bottom,#0d1a2e,#1a2d4a)}
+.g-ground{position:absolute;bottom:52px;left:0;right:0;height:8px;background:#2a2a2a}
+.g-road{position:absolute;bottom:52px;left:0;right:0;height:24px;background:#1a1a1a}
+.g-road-line{position:absolute;bottom:62px;height:2px;background:rgba(255,255,255,.12)}
+
+/* buildings */
+.buildings{position:absolute;bottom:76px;left:0;right:0;display:flex;align-items:flex-end;padding:0 16px;gap:6px}
+.bld{flex-shrink:0;position:relative}
+.bld-body{background:#1e1e2a;border:1px solid rgba(255,255,255,.06)}
+.bld.active .bld-body{background:#1a2540;border-color:rgba(26,86,255,.25)}
+.bld-sign{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-family:var(--f-mono);font-size:.36rem;letter-spacing:.05em;
+  color:rgba(255,255,255,.2);white-space:nowrap;
+}
+.bld.active .bld-sign{color:var(--blue)}
+.bld-door{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:7px;height:10px;background:#111;border-top:2px solid rgba(255,255,255,.08)}
+.bld.active .bld-door{border-top-color:rgba(26,86,255,.6);animation:doorGlow 1.8s ease-in-out infinite}
+@keyframes doorGlow{0%,100%{border-top-color:rgba(26,86,255,.4)}50%{border-top-color:var(--blue)}}
+
+/* windows */
+.bld-wins{position:absolute;top:4px;left:4px;right:4px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.win{height:5px;background:rgba(255,255,255,.04)}
+.win.lit{background:rgba(255,220,80,.3)}
+.win.lit-b{background:rgba(26,86,255,.25)}
+
+/* pixel character */
+.p-char{position:absolute;z-index:3;bottom:76px;animation:charWalk 4s ease-in-out infinite alternate}
+@keyframes charWalk{0%{left:20%}100%{left:48%}}
+.px-shadow{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:14px;height:2px;background:rgba(0,0,0,.5);border-radius:50%}
+.px-h{width:8px;height:7px;background:#ffd4a8;margin:0 auto;position:relative}
+.px-h::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:#e8b88a}
+.px-b{width:10px;height:8px;margin:0 auto;background:var(--blue)}
+.px-a-l{position:absolute;left:-3px;top:0;width:3px;height:6px;background:var(--blue)}
+.px-a-r{position:absolute;right:-3px;top:0;width:3px;height:6px;background:var(--blue)}
+.px-legs{width:10px;height:5px;margin:0 auto;position:relative}
+.px-ll{position:absolute;left:0;bottom:0;width:4px;height:5px;background:#333}
+.px-lr{position:absolute;right:0;bottom:0;width:4px;height:5px;background:#333}
+
+/* shop popup arrow */
+.shop-arrow{
+  position:absolute;z-index:7;
+  font-family:var(--f-mono);font-size:.38rem;letter-spacing:.06em;
+  color:#fff;background:var(--blue);padding:4px 8px;white-space:nowrap;
+  animation:arrowBob .9s ease-in-out infinite alternate;
+  bottom:130px;left:49%;
+}
+.shop-arrow::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--blue)}
+@keyframes arrowBob{0%{transform:translateY(0)}100%{transform:translateY(-4px)}}
+
+/* right panel */
+.game-panel{}
+.gp-section{margin-bottom:32px}
+.gp-label{font-family:var(--f-mono);font-size:.48rem;letter-spacing:.22em;color:var(--blue);text-transform:uppercase;margin-bottom:12px}
+.gp-text{font-size:.72rem;line-height:1.9;color:rgba(10,10,10,.45);margin-bottom:16px}
+
+.map-list{}
+.map-item{
+  display:flex;align-items:center;justify-content:space-between;
+  border:1.5px solid var(--border);padding:14px 16px;margin-bottom:8px;cursor:none;
+  transition:border-color .2s,background .2s;
+}
+.map-item:hover,.map-item.active{border-color:rgba(26,86,255,.3);background:var(--blue-dim)}
+.map-item-name{font-family:var(--f-disp);font-size:1rem;letter-spacing:.06em;margin-bottom:3px}
+.map-item-meta{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;color:rgba(10,10,10,.3)}
+.map-item-badge{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.08em;padding:4px 8px;border:1.5px solid var(--border)}
+.map-item-badge.live{border-color:var(--blue);color:var(--blue)}
+.map-item-badge.soon{color:rgba(10,10,10,.25)}
+
+.char-preview{
+  border:1.5px solid var(--border);padding:20px;display:flex;align-items:center;gap:20px;margin-bottom:12px;
+}
+.char-sprite{width:48px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex-shrink:0}
+.c-head{width:16px;height:14px;background:#ffd4a8}
+.c-body{width:20px;height:16px;background:var(--blue);position:relative}
+.c-al{position:absolute;left:-5px;top:0;width:5px;height:12px;background:var(--blue)}
+.c-ar{position:absolute;right:-5px;top:0;width:5px;height:12px;background:var(--blue)}
+.c-legs{width:20px;height:10px;display:flex;gap:2px}
+.c-leg{flex:1;background:#222}
+.char-info{}
+.char-name{font-family:var(--f-disp);font-size:1.1rem;letter-spacing:.06em;margin-bottom:6px}
+.char-stats{display:flex;flex-direction:column;gap:3px}
+.stat{display:flex;align-items:center;gap:8px}
+.stat-label{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;color:rgba(10,10,10,.3);width:40px}
+.stat-bar{flex:1;height:3px;background:var(--border);position:relative}
+.stat-bar::after{content:'';position:absolute;inset:0;background:var(--blue);transform-origin:left}
+.stat-bar.s80::after{transform:scaleX(.8)}
+.stat-bar.s60::after{transform:scaleX(.6)}
+.stat-bar.s95::after{transform:scaleX(.95)}
+
+.start-btn{font-family:var(--f-disp);font-size:.9rem;letter-spacing:.28em;color:#fff;background:var(--blue);border:none;padding:14px;cursor:none;width:100%;transition:opacity .2s}
+.start-btn:hover{opacity:.85}
+
+/* bottom items */
+.item-grid{padding:0 12vw 80px;margin-top:40px}
+.ig-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.ig-title{font-family:var(--f-disp);font-size:1.5rem;letter-spacing:.06em}
+.ig-sub{font-family:var(--f-mono);font-size:.48rem;letter-spacing:.15em;color:rgba(10,10,10,.3)}
+.ig-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:768px){.ig-grid{grid-template-columns:repeat(2,1fr)}}
+.item-card{border:1.5px solid var(--border);overflow:hidden;cursor:none;transition:border-color .2s;position:relative}
+.item-card:hover{border-color:rgba(26,86,255,.3)}
+.item-thumb{aspect-ratio:1;background:rgba(10,10,10,.04);display:flex;align-items:center;justify-content:center;position:relative}
+.item-icon{font-size:2.5rem;opacity:.12}
+.item-tag{position:absolute;top:8px;left:8px;font-family:var(--f-mono);font-size:.4rem;letter-spacing:.08em;background:var(--fg);color:var(--bg);padding:3px 7px}
+.item-info{padding:12px}
+.item-name{font-family:var(--f-disp);font-size:.9rem;letter-spacing:.06em;margin-bottom:3px}
+.item-brand{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;color:rgba(10,10,10,.3);margin-bottom:6px}
+.item-price{font-family:var(--f-mono);font-size:.52rem;letter-spacing:.06em;color:var(--fg)}
+.item-buy{width:100%;font-family:var(--f-mono);font-size:.48rem;letter-spacing:.12em;color:rgba(10,10,10,.4);background:transparent;border:none;border-top:1px solid var(--border);padding:8px;cursor:none;transition:background .2s,color .2s}
+.item-buy:hover{background:var(--blue);color:#fff}
+
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div id="cr"></div><div id="cd"></div>
+<div id="reveal"></div>
+<div id="trans"><div id="trans-lbl">SEOULFIT</div></div>
+
+<header>
+  <a class="hd-logo" href="index.html" data-href="index.html" data-label="SEOULFIT">SEOUL<em>FIT</em></a>
+  <span class="hd-tag">픽셀 서울</span>
+  <button class="hd-back" data-href="index.html" data-label="SEOULFIT">← 메인으로</button>
+</header>
+
+<div class="hero">
+  <div>
+    <div style="font-family:var(--f-mono);font-size:.5rem;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;margin-bottom:16px">Card 03 — Pixel RPG</div>
+    <h1 class="hero-title">픽셀<em>서울</em></h1>
+  </div>
+  <p class="hero-sub">성수동 플래그샵을 픽셀 캐릭터로 탐험하세요. 게임 속 구매가 Toss 결제 후 현실로 배송됩니다.</p>
+</div>
+<div class="divider"></div>
+
+<div class="game-wrap">
+  <!-- GAME SCREEN -->
+  <div>
+    <div class="game-screen">
+      <div class="g-scanlines"></div>
+      <div class="g-vignette"></div>
+      <div class="g-ui">
+        <span class="ghp">♥ ♥ ♥</span>
+        <span class="gbl">⬡ GOLD 3,200</span>
+        <span>LV.4</span>
+        <span class="gloc">📍 성수 FLAGSHOP STREET</span>
+      </div>
+      <div class="g-sky"></div>
+      <div class="g-road">
+        <div class="g-road-line" style="left:10%;width:12%"></div>
+        <div class="g-road-line" style="left:30%;width:10%"></div>
+        <div class="g-road-line" style="left:55%;width:14%"></div>
+        <div class="g-road-line" style="left:78%;width:10%"></div>
+      </div>
+      <div class="g-ground"></div>
+      <!-- buildings -->
+      <div class="buildings">
+        <div class="bld" style="width:52px">
+          <div class="bld-sign">카페</div>
+          <div class="bld-body" style="width:52px;height:58px">
+            <div class="bld-wins" style="grid-template-columns:repeat(2,1fr)">
+              <div class="win lit"></div><div class="win"></div>
+              <div class="win"></div><div class="win lit"></div>
+            </div>
+          </div>
+          <div class="bld-door"></div>
+        </div>
+        <div class="bld" style="width:36px">
+          <div class="bld-body" style="width:36px;height:44px">
+            <div class="bld-wins" style="grid-template-columns:repeat(2,1fr)"><div class="win lit-b"></div><div class="win"></div></div>
+          </div>
+          <div class="bld-door"></div>
+        </div>
+        <div class="bld active" style="width:72px">
+          <div class="bld-sign">FLAGSHOP</div>
+          <div class="bld-body" style="width:72px;height:80px">
+            <div class="bld-wins">
+              <div class="win lit-b"></div><div class="win lit-b"></div><div class="win lit-b"></div>
+              <div class="win"></div><div class="win lit-b"></div><div class="win"></div>
+              <div class="win lit-b"></div><div class="win"></div><div class="win lit-b"></div>
+            </div>
+          </div>
+          <div class="bld-door"></div>
+        </div>
+        <div class="bld" style="width:44px">
+          <div class="bld-sign">편집샵</div>
+          <div class="bld-body" style="width:44px;height:52px">
+            <div class="bld-wins" style="grid-template-columns:repeat(2,1fr)"><div class="win lit"></div><div class="win"></div><div class="win"></div><div class="win lit"></div></div>
+          </div>
+          <div class="bld-door"></div>
+        </div>
+        <div class="bld" style="width:32px">
+          <div class="bld-body" style="width:32px;height:38px"></div>
+          <div class="bld-door"></div>
+        </div>
+        <div class="bld" style="width:56px">
+          <div class="bld-sign">빈티지</div>
+          <div class="bld-body" style="width:56px;height:66px">
+            <div class="bld-wins"><div class="win"></div><div class="win lit-b"></div><div class="win"></div></div>
+          </div>
+          <div class="bld-door"></div>
+        </div>
+      </div>
+      <!-- character -->
+      <div class="p-char">
+        <div class="px-h"></div>
+        <div class="px-b" style="position:relative">
+          <div class="px-a-l"></div><div class="px-a-r"></div>
+        </div>
+        <div class="px-legs"><div class="px-ll"></div><div class="px-lr"></div></div>
+        <div class="px-shadow"></div>
+      </div>
+      <!-- shop prompt -->
+      <div class="shop-arrow">ENTER SHOP ▲</div>
+      <!-- dialog -->
+      <div class="g-dialog">
+        <div class="g-dialog-name">FLAGSHOP NPC</div>
+        <div class="g-dialog-text">어서오세요! 오늘의 신상 아이템을 확인해보세요. 구매하면 실제 집으로 배송됩니다.</div>
+      </div>
+    </div>
+    <div style="font-family:var(--f-mono);font-size:.46rem;letter-spacing:.12em;color:rgba(10,10,10,.25);margin-top:10px;text-align:center">방향키 이동 · E 상호작용 · F 구매</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="game-panel">
+    <div class="gp-section">
+      <div class="gp-label">현재 맵</div>
+      <div class="map-list">
+        <div class="map-item active">
+          <div>
+            <div class="map-item-name">성수동 Vol.1</div>
+            <div class="map-item-meta">플래그샵 12개 · 아이템 240종</div>
+          </div>
+          <div class="map-item-badge live">LIVE</div>
+        </div>
+        <div class="map-item">
+          <div>
+            <div class="map-item-name">홍대 Vol.2</div>
+            <div class="map-item-meta">스트리트 편집샵 · 클럽</div>
+          </div>
+          <div class="map-item-badge soon">SOON</div>
+        </div>
+        <div class="map-item">
+          <div>
+            <div class="map-item-name">압구정 Vol.3</div>
+            <div class="map-item-meta">럭셔리 부티크</div>
+          </div>
+          <div class="map-item-badge soon">SOON</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gp-section">
+      <div class="gp-label">내 캐릭터</div>
+      <div class="char-preview">
+        <div class="char-sprite">
+          <div class="c-head"></div>
+          <div class="c-body"><div class="c-al"></div><div class="c-ar"></div></div>
+          <div class="c-legs"><div class="c-leg"></div><div class="c-leg"></div></div>
+        </div>
+        <div class="char-info">
+          <div class="char-name">PLAYER_01</div>
+          <div class="char-stats">
+            <div class="stat"><span class="stat-label">STYLE</span><div class="stat-bar s80"></div></div>
+            <div class="stat"><span class="stat-label">GOLD</span><div class="stat-bar s60"></div></div>
+            <div class="stat"><span class="stat-label">REP</span><div class="stat-bar s95"></div></div>
+          </div>
+        </div>
+      </div>
+      <button class="start-btn">게임 시작하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ITEMS GRID -->
+<div class="item-grid">
+  <div class="divider" style="margin:0 0 40px"></div>
+  <div class="ig-header">
+    <div class="ig-title">FLAGSHOP 아이템</div>
+    <div class="ig-sub">성수동 Vol.1 · 240 ITEMS</div>
+  </div>
+  <div class="ig-grid">
+    <div class="item-card">
+      <div class="item-thumb"><div class="item-icon">👕</div><div class="item-tag">NEW</div></div>
+      <div class="item-info">
+        <div class="item-name">OVERSIZED TEE</div>
+        <div class="item-brand">MMMG · 미니멀</div>
+        <div class="item-price">39,000원</div>
+      </div>
+      <button class="item-buy">Toss로 구매 →</button>
+    </div>
+    <div class="item-card">
+      <div class="item-thumb"><div class="item-icon">🧥</div><div class="item-tag">BEST</div></div>
+      <div class="item-info">
+        <div class="item-name">TRENCH COAT</div>
+        <div class="item-brand">ANDERSSON BELL</div>
+        <div class="item-price">248,000원</div>
+      </div>
+      <button class="item-buy">Toss로 구매 →</button>
+    </div>
+    <div class="item-card">
+      <div class="item-thumb"><div class="item-icon">👖</div></div>
+      <div class="item-info">
+        <div class="item-name">WIDE DENIM</div>
+        <div class="item-brand">LEESLE · 성수</div>
+        <div class="item-price">78,000원</div>
+      </div>
+      <button class="item-buy">Toss로 구매 →</button>
+    </div>
+    <div class="item-card">
+      <div class="item-thumb"><div class="item-icon">👟</div><div class="item-tag">LIMITED</div></div>
+      <div class="item-info">
+        <div class="item-name">CHUNKY SNEAKER</div>
+        <div class="item-brand">IISE · 서울</div>
+        <div class="item-price">165,000원</div>
+      </div>
+      <button class="item-buy">Toss로 구매 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const cr=document.getElementById('cr'),cd=document.getElementById('cd');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.map-item').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'))});
+
+const trans=document.getElementById('trans');
+function nav(href,label){document.getElementById('trans-lbl').textContent=label||'SEOULFIT';trans.classList.add('go');setTimeout(()=>window.location.href=href,580)}
+document.querySelectorAll('[data-href]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();nav(el.dataset.href,el.dataset.label)}));
+
+document.querySelectorAll('.map-item').forEach(m=>{m.addEventListener('click',()=>{document.querySelectorAll('.map-item').forEach(x=>x.classList.remove('active'));m.classList.add('active')})});
+</script>
+</body>
+</html>
