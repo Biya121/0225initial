@@ -1,9 +1,16 @@
 """
-Musinsa 브랜드 크롤러 (kpop-brands.json 기반)
-================================================
-kpop-brands.json에 정의된 브랜드 목록을 기준으로 무신사 API를 호출합니다.
-- API 응답에서 이미지 URL이 없으면 CDN URL을 goodsNo로 직접 구성합니다.
-- 결과는 6시간 단위로 backend/data/musinsa-cache.json에 캐싱합니다.
+Musinsa 브랜드 크롤러 (Playwright 헤드리스 브라우저)
+=====================================================
+kpop-brands.json에 정의된 브랜드 페이지를 Playwright(Chromium)로 직접 렌더링해
+상품 데이터를 추출합니다.
+
+  - debug-crawl/route.js (Puppeteer) 로직을 Python async Playwright로 1:1 포팅
+  - 이미지 없을 경우 msscdn.net CDN URL을 goodsNo로 직접 구성
+  - 결과는 6시간 단위로 backend/data/musinsa-cache.json에 캐싱
+
+초기 설치:
+  pip install -r requirements.txt
+  playwright install chromium
 """
 
 import json
@@ -12,25 +19,13 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import httpx
+from playwright.async_api import async_playwright
 
 # ── 경로 ──────────────────────────────────────────────────────────────────────
 DATA_DIR    = Path(__file__).parent / "data"
 CACHE_PATH  = DATA_DIR / "musinsa-cache.json"
 BRANDS_PATH = DATA_DIR / "kpop-brands.json"
-CACHE_TTL   = 6 * 3600  # 6시간 (초)
-
-# ── 요청 헤더 ─────────────────────────────────────────────────────────────────
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "ko-KR,ko;q=0.9",
-    "Referer": "https://www.musinsa.com/",
-    "Origin": "https://www.musinsa.com",
-}
+CACHE_TTL   = 6 * 3600  # 6시간
 
 # ── 예산 범위 ─────────────────────────────────────────────────────────────────
 BUDGET_RANGE: Dict[str, Tuple[int, int]] = {
@@ -39,6 +34,66 @@ BUDGET_RANGE: Dict[str, Tuple[int, int]] = {
     "15~30만원": (150_000, 300_000),
     "30만원+":   (300_000, 9_999_999),
 }
+
+# ── 브라우저 식별 위장 ────────────────────────────────────────────────────────
+_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/122.0.0.0 Safari/537.36"
+)
+
+# page.evaluate에 넘길 JS (Puppeteer debug-crawl/route.js와 동일 로직)
+_JS_EXTRACT = """(brandName) => {
+    const results = [];
+    const nameLinks = Array.from(document.querySelectorAll('a'))
+        .filter(a => /\\/products\\/\\d+/.test(a.href) && a.innerText?.trim().length > 2);
+
+    nameLinks.slice(0, 12).forEach(link => {
+        const name = link.innerText?.trim();
+        if (!name) return;
+
+        const goodsNo = link.href.match(/\\/products\\/(\\d+)/)?.[1];
+        let card = link.parentElement;
+        let img = null, price = 0;
+
+        for (let i = 0; i < 8; i++) {
+            if (!card) break;
+
+            if (!img) {
+                const imgEl = card.querySelector('img[src*="msscdn.net"]');
+                if (imgEl?.src?.includes('goods_img')) img = imgEl.src;
+            }
+            if (!price) {
+                const priceEl = card.querySelector(
+                    'span.text-body_13px_semi, [class*="dMbRNh"]'
+                );
+                if (priceEl) {
+                    const raw = priceEl.textContent.replace(/[^0-9]/g, '');
+                    if (raw.length >= 4) price = parseInt(raw, 10);
+                }
+            }
+            if (img && price) break;
+            card = card.parentElement;
+        }
+
+        // 이미지 없으면 CDN URL 직접 구성 (debug-crawl 방식)
+        if (!img && goodsNo) {
+            const prefix = goodsNo.slice(0, 4);
+            img = `https://image.msscdn.net/images/goods_img/${prefix}/${goodsNo}/${goodsNo}_1_500.jpg`;
+        }
+
+        results.push({
+            name,
+            brand:       brandName,
+            price_krw:   price,
+            image_url:   img   ?? null,
+            product_url: link.href,
+            goods_no:    goodsNo ?? null,
+        });
+    });
+
+    return results;
+}"""
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -90,14 +145,10 @@ _STYLE_MAP: Dict[str, List[str]] = {
 
 
 def calc_match_score(user_input: dict, brand: dict) -> int:
-    """
-    브랜드 ↔ 사용자 입력 매칭 점수 (0~100+).
-    matchScore.js 알고리즘 포팅.
-    """
     score = 0
     brand_tags: List[str] = brand.get("style_tags", [])
 
-    # ① 스타일 매칭 (35점)
+    # 스타일 매칭 (35점)
     user_styles: List[str] = user_input.get("styles", [])
     if user_styles:
         matched = 0
@@ -109,7 +160,7 @@ def calc_match_score(user_input: dict, brand: dict) -> int:
                     break
         score += int(35 * matched / len(user_styles))
 
-    # ② 예산 매칭 (25점)
+    # 예산 매칭 (25점)
     budget_key = user_input.get("budget_krw", "")
     budget = BUDGET_RANGE.get(budget_key)
     if budget:
@@ -118,7 +169,7 @@ def calc_match_score(user_input: dict, brand: dict) -> int:
         if brand_min <= budget[1] and brand_max >= budget[0]:
             score += 25
 
-    # ③ 아이돌 레퍼런스 확인 보너스 (+5)
+    # 아이돌 레퍼런스 보너스 (+5)
     if any(ref.get("confirmed") for ref in brand.get("idol_references", [])):
         score += 5
 
@@ -126,22 +177,17 @@ def calc_match_score(user_input: dict, brand: dict) -> int:
 
 
 def rank_brands(user_input: dict, brands: List[Dict]) -> List[Dict]:
-    """사용자 입력에 따라 브랜드를 점수 내림차순으로 정렬"""
     scored = [(calc_match_score(user_input, b), b) for b in brands]
     scored.sort(key=lambda x: -x[0])
     return [b for _, b in scored]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 무신사 API 검색
+# CDN URL 유틸
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _cdn_url(goods_no: str) -> str:
-    """
-    무신사 CDN 이미지 URL 직접 구성 (debug-crawl/route.js 방식).
-    goods_no의 앞 4자리 = 서브디렉토리
-    예) 5621602 → images/goods_img/5621/5621602/5621602_1_500.jpg
-    """
+    """goodsNo로 msscdn.net 이미지 URL 직접 구성 (debug-crawl 방식)"""
     if not goods_no:
         return ""
     prefix = goods_no[:4]
@@ -151,170 +197,89 @@ def _cdn_url(goods_no: str) -> str:
     )
 
 
-def _normalize_img(url: str) -> str:
-    if not url:
-        return ""
-    url = url.strip()
-    if url.startswith("//"):
-        return "https:" + url
-    if url.startswith("/"):
-        return "https://image.msscdn.net" + url
-    if url.startswith("http://"):
-        return url.replace("http://", "https://", 1)
-    return url
+# ══════════════════════════════════════════════════════════════════════════════
+# Playwright 크롤러 (핵심)
+# ══════════════════════════════════════════════════════════════════════════════
 
+async def _crawl_brand_playwright(
+    brand_data: Dict,
+    budget: Optional[Tuple[int, int]],
+    limit: int,
+) -> List[Dict]:
+    """
+    Playwright(Chromium)로 브랜드 페이지를 렌더링하여 상품 추출.
+    debug-crawl/route.js Puppeteer 로직과 동일.
+    """
+    musinsa_url = brand_data.get("musinsa_url", "")
+    if not musinsa_url:
+        print(f"[playwright] {brand_data.get('name_ko', '?')}: musinsa_url 없음")
+        return []
 
-def _extract_list(data) -> List:
-    """다양한 무신사 API 응답 구조에서 goods 리스트 추출"""
-    if isinstance(data, list):
-        return data
-    inner = data.get("data")
-    if isinstance(inner, dict):
-        for key in ("goods", "list", "items", "goodsList"):
-            v = inner.get(key)
-            if isinstance(v, list) and v:
-                return v
-    if isinstance(inner, list):
-        return inner
-    for key in ("goods", "items", "list", "goodsList", "products"):
-        v = data.get(key)
-        if isinstance(v, list) and v:
-            return v
-    return []
+    url = musinsa_url + "?sortCode=POPULAR"
+    brand_name = brand_data.get("name_ko", "")
+    print(f"[playwright] 접속: {url}")
 
-
-def _parse_item(item: Dict, brand_name_fallback: str = "") -> Optional[Dict]:
-    """무신사 item dict → 정규화된 상품 dict"""
+    raw_items: List[Dict] = []
     try:
-        goods_no = str(
-            item.get("goodsNo") or item.get("goods_no")
-            or item.get("id") or item.get("goodsId") or ""
-        )
-
-        name = (
-            item.get("goodsNm") or item.get("goods_name")
-            or item.get("name") or item.get("goodsName") or ""
-        ).strip()
-
-        brand = ""
-        brand_raw = item.get("brandNm") or item.get("brand_name") or ""
-        if brand_raw:
-            brand = brand_raw
-        elif isinstance(item.get("brand"), dict):
-            brand = item["brand"].get("name") or item["brand"].get("brandNm") or ""
-        elif isinstance(item.get("brand"), str):
-            brand = item["brand"]
-        brand = brand.strip() or brand_name_fallback
-
-        # 가격: 원가 기준, 최소 1,000원 이상이어야 유효
-        price = 0
-        price_raw = item.get("goodsPrice") or item.get("price") or {}
-        if isinstance(price_raw, dict):
-            price = int(
-                price_raw.get("originPrice")
-                or price_raw.get("normalPrice")
-                or price_raw.get("salePrice")
-                or price_raw.get("price")
-                or 0
+        async with async_playwright() as pw:
+            browser = await pw.chromium.launch(
+                headless=True,
+                args=[
+                    "--no-sandbox",
+                    "--disable-setuid-sandbox",
+                    "--disable-blink-features=AutomationControlled",
+                ],
             )
-        elif isinstance(price_raw, (int, float)):
-            price = int(price_raw)
-
-        if price < 1000:
-            price = int(
-                item.get("normalPrice") or item.get("salePrice")
-                or item.get("price") or 0
+            page = await browser.new_page()
+            await page.set_user_agent(_UA)
+            await page.set_extra_http_headers({"Accept-Language": "ko-KR,ko;q=0.9"})
+            await page.add_init_script(
+                "Object.defineProperty(navigator,'webdriver',{get:()=>undefined})"
             )
 
-        # 이미지: API 응답 → 없으면 CDN fallback
-        img = (
-            item.get("thumbnailImageUrl") or item.get("thumbnail")
-            or item.get("goods_img") or item.get("image")
-            or item.get("imgUrl") or item.get("listImageUrl")
-            or item.get("imageUrl") or ""
-        )
-        img = _normalize_img(img)
-        if not img and goods_no:
-            img = _cdn_url(goods_no)  # ← CDN fallback (debug-crawl 방식)
+            await page.goto(url, wait_until="networkidle", timeout=30000)
+            await page.wait_for_timeout(5000)   # React 렌더링 대기
 
-        link = (
-            item.get("linkUrl") or item.get("product_url") or item.get("url")
-            or (f"/products/{goods_no}" if goods_no else "")
-        )
-        if link and not link.startswith("http"):
-            link = "https://www.musinsa.com" + link
+            raw_items = await page.evaluate(_JS_EXTRACT, brand_name)
+            print(
+                f"[playwright] {brand_name}: {len(raw_items)}개 추출, "
+                f"이미지: {sum(1 for i in raw_items if i.get('image_url'))}개"
+            )
+            await browser.close()
+
+    except Exception as e:
+        print(f"[playwright] {brand_name} 실패: {e}")
+        return []
+
+    # 정규화 + 예산 필터
+    products: List[Dict] = []
+    for item in raw_items:
+        price = item.get("price_krw", 0)
+        name  = item.get("name", "").strip()
 
         if not name or price < 1000:
-            return None
+            continue
+        if budget and not (budget[0] <= price <= budget[1]):
+            continue
 
-        return {
-            "goods_no":          goods_no,
-            "brand":             brand,
-            "product_name":      name,
-            "price_krw":         price,
-            "image_url":         img,
-            "product_url":       link,
-            "is_korean":         True,
-            "source":            "musinsa",
-        }
-    except Exception as e:
-        print(f"[crawler] _parse_item 오류: {e}")
-        return None
+        goods_no  = item.get("goods_no") or ""
+        image_url = item.get("image_url") or _cdn_url(goods_no)   # CDN fallback
 
+        products.append({
+            "goods_no":      goods_no,
+            "brand":         brand_name,
+            "product_name":  name,
+            "price_krw":     price,
+            "image_url":     image_url,
+            "product_url":   item.get("product_url", ""),
+            "is_korean":     True,
+            "source":        "musinsa",
+        })
+        if len(products) >= limit:
+            break
 
-async def _search_api(keyword: str, budget: Optional[Tuple[int, int]], limit: int) -> List[Dict]:
-    """
-    무신사 검색 API 3개 엔드포인트를 순서대로 시도.
-    성공 시 정규화된 상품 목록 반환, 전부 실패 시 빈 리스트.
-    """
-    price_p = {"minPrice": budget[0], "maxPrice": budget[1]} if budget else {}
-    endpoints = [
-        {
-            "url": "https://www.musinsa.com/api/search/v4/goods",
-            "params": {"keyword": keyword, "gf": "A", "sortCode": "pop_score",
-                       "page": 0, "size": 20, **price_p},
-        },
-        {
-            "url": "https://search.musinsa.com/api/search",
-            "params": {"q": keyword, "type": "goods", "n": 20, "p": 1,
-                       **({'price_min': budget[0], 'price_max': budget[1]} if budget else {})},
-        },
-        {
-            "url": "https://www.musinsa.com/search/goods",
-            "params": {"q": keyword, "type": "goods", "sortCode": "popular",
-                       "page": 1, **price_p},
-        },
-    ]
-
-    async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as client:
-        for ep in endpoints:
-            try:
-                r = await client.get(ep["url"], params=ep["params"], headers=HEADERS)
-                if r.status_code != 200:
-                    continue
-                items = _extract_list(r.json())
-                if not items:
-                    continue
-
-                products: List[Dict] = []
-                for item in items:
-                    p = _parse_item(item, brand_name_fallback=keyword)
-                    if not p:
-                        continue
-                    if budget and not (budget[0] <= p["price_krw"] <= budget[1]):
-                        continue
-                    products.append(p)
-                    if len(products) >= limit:
-                        break
-
-                if products:
-                    print(f"[crawler] '{keyword}' → {len(products)}개 ({ep['url']})")
-                    return products
-            except Exception as e:
-                print(f"[crawler] {ep['url']} 실패: {e}")
-
-    print(f"[crawler] '{keyword}' 크롤링 실패 — 모든 엔드포인트 소진")
-    return []
+    print(f"[playwright] {brand_name}: 최종 {len(products)}개 상품")
+    return products
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -322,33 +287,18 @@ async def _search_api(keyword: str, budget: Optional[Tuple[int, int]], limit: in
 # ══════════════════════════════════════════════════════════════════════════════
 
 async def search_brand(brand_data: Dict, budget_krw: str = "", limit: int = 4) -> List[Dict]:
-    """
-    단일 브랜드 검색.
-    brand_data: kpop-brands.json의 브랜드 항목
-    """
-    keyword = brand_data.get("musinsa_keyword") or brand_data.get("name_ko", "")
-    brand_name = brand_data.get("name_ko", keyword)
-    brand_id   = brand_data.get("id", keyword)
-
+    """단일 브랜드 크롤링 (캐시 미사용)"""
     budget = BUDGET_RANGE.get(budget_krw)
-    products = await _search_api(keyword, budget, limit)
+    products = await _crawl_brand_playwright(brand_data, budget, limit)
 
     for p in products:
-        p["brand_id"] = brand_id
-        p["brand"] = p["brand"] or brand_name  # 브랜드명 보강
         p.setdefault("style_tags", brand_data.get("style_tags", [])[:3])
-        # 이미지 없으면 CDN 재시도
-        if not p["image_url"] and p.get("goods_no"):
-            p["image_url"] = _cdn_url(p["goods_no"])
 
     return products
 
 
 async def search_brand_cached(brand_data: Dict, budget_krw: str = "", limit: int = 4) -> List[Dict]:
-    """
-    캐시 우선 브랜드 검색 (TTL: 6h).
-    캐시 미스 또는 만료 시 실제 크롤링 후 저장.
-    """
+    """캐시 우선 브랜드 크롤링 (TTL: 6h)"""
     brand_id  = brand_data.get("id", brand_data.get("name_ko", "unknown"))
     cache_key = f"{brand_id}__{budget_krw or 'all'}"
 
