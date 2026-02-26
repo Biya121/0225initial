@@ -1,0 +1,14 @@
+# 환경 변수 (API 키 절대 커밋 금지)
+backend/.env
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# 캐시 파일
+backend/products_cache.json
