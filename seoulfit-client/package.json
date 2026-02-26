@@ -1,0 +1,25 @@
+{
+  "name": "seoulfit-client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@stripe/stripe-js": "^8.8.0",
+    "cheerio": "^1.2.0",
+    "next": "16.1.6",
+    "node-cron": "^4.2.1",
+    "puppeteer": "^24.37.5",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "stripe": "^20.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6"
+  }
+}

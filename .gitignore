@@ -12,3 +12,4 @@ env/
 
 # 캐시 파일
 backend/products_cache.json
+backend/data/musinsa-cache.json
