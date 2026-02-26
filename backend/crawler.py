@@ -18,7 +18,6 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-import httpx
 from playwright.async_api import async_playwright
 
 # ── 경로 ──────────────────────────────────────────────────────────────────────
