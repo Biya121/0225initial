@@ -5,11 +5,13 @@
 <title>AI 패션 추천 — SEOULFIT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- EmailJS SDK: https://www.emailjs.com/ -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f8f7f4;--fg:#0a0a0a;--blue:#1a56ff;--blue-dim:rgba(26,86,255,.08);
-  --border:rgba(10,10,10,.1);
+  --border:rgba(10,10,10,.1);--red:#e02020;
   --f-disp:'Bebas Neue',sans-serif;--f-body:'Noto Sans KR',sans-serif;--f-mono:'DM Mono',monospace;
 }
 html,body{background:var(--bg);color:var(--fg);font-family:var(--f-body);min-height:100vh;cursor:none;overflow-x:hidden}
@@ -19,11 +21,9 @@ html,body{background:var(--bg);color:var(--fg);font-family:var(--f-body);min-hei
 #cd{position:fixed;top:0;left:0;z-index:10000;width:5px;height:5px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
 .ch #cr{width:48px;height:48px;border-color:var(--blue);background:var(--blue-dim);border-radius:4px}
 
-/* transition reveal */
+/* transitions */
 #reveal{position:fixed;inset:0;z-index:5000;background:var(--fg);transform-origin:top;animation:revealOut .6s cubic-bezier(.76,0,.24,1) .1s forwards}
 @keyframes revealOut{0%{transform:scaleY(1)}100%{transform:scaleY(0)}}
-
-/* page transition out */
 #trans{position:fixed;inset:0;z-index:6000;background:var(--fg);transform:scaleY(0);transform-origin:bottom;pointer-events:none}
 #trans.go{animation:transGo .55s cubic-bezier(.76,0,.24,1) forwards}
 @keyframes transGo{to{transform:scaleY(1)}}
@@ -42,18 +42,21 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 .hero{padding:130px 12vw 60px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap}
 .hero-title{font-family:var(--f-disp);font-size:clamp(4rem,8vw,9rem);line-height:.88;letter-spacing:-.01em}
 .hero-title em{color:var(--blue);font-style:normal}
-.hero-sub{font-size:.75rem;line-height:2;color:rgba(10,10,10,.45);max-width:260px;letter-spacing:.02em}
+.hero-sub{font-size:.75rem;line-height:2;color:rgba(10,10,10,.45);max-width:280px;letter-spacing:.02em}
+
+/* rate badge */
+#rate-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);padding:6px 14px;margin-top:12px;font-family:var(--f-mono);font-size:.44rem;letter-spacing:.1em;color:rgba(10,10,10,.4)}
+#rate-badge .live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* divider */
 .divider{height:1px;background:var(--border);margin:0 12vw}
 
-/* form section */
+/* layout */
 .section{padding:52px 12vw;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-@media(max-width:768px){.section{grid-template-columns:1fr;padding:40px 6vw}.hero{padding:120px 6vw 48px}}
+@media(max-width:900px){.section{grid-template-columns:1fr;padding:40px 6vw}.hero{padding:120px 6vw 48px}}
 
-.form-col{}
-.result-col{}
-
+/* form */
 .f-label{font-family:var(--f-mono);font-size:.48rem;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;margin-bottom:10px}
 .f-input{
   width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);
@@ -62,18 +65,22 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 }
 .f-input:focus{border-color:var(--blue)}
 .f-input::placeholder{color:rgba(10,10,10,.2)}
-
 .f-row{display:flex;gap:16px}
 .f-row .f-input{flex:1}
 
-.tag-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
-.tag{
-  font-family:var(--f-mono);font-size:.5rem;letter-spacing:.1em;
-  border:1.5px solid var(--border);padding:6px 14px;cursor:none;
-  transition:all .2s;color:rgba(10,10,10,.4);background:transparent;
-}
+/* email input (prominent) */
+.email-wrap{background:var(--blue-dim);border:1.5px solid rgba(26,86,255,.2);padding:14px 16px;margin-bottom:24px}
+.email-wrap .f-label{color:var(--blue)}
+.email-wrap .f-input{border-bottom-color:rgba(26,86,255,.25);margin-bottom:0}
+.email-wrap .f-input:focus{border-color:var(--blue)}
+.email-note{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.06em;color:rgba(26,86,255,.5);margin-top:6px}
+
+/* tags */
+.tag-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.tag{font-family:var(--f-mono);font-size:.5rem;letter-spacing:.1em;border:1.5px solid var(--border);padding:6px 14px;cursor:none;transition:all .2s;color:rgba(10,10,10,.4);background:transparent}
 .tag:hover,.tag.on{border-color:var(--blue);color:var(--fg);background:var(--blue-dim)}
 
+/* submit */
 .submit-btn{
   font-family:var(--f-disp);font-size:.9rem;letter-spacing:.28em;
   color:#fff;background:var(--blue);border:none;
@@ -81,37 +88,81 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
   transition:opacity .2s;margin-top:8px;
 }
 .submit-btn:hover{opacity:.85}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
 
-/* results */
-.r-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.r-title{font-family:var(--f-disp);font-size:1.6rem;letter-spacing:.06em}
+/* ── result col ────────────────────────────────────────────── */
+.result-col{min-height:200px}
+
+/* idol style banner */
+.idol-banner{border:1.5px solid rgba(26,86,255,.2);background:var(--blue-dim);padding:18px 20px;margin-bottom:20px}
+.idol-banner-header{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.idol-banner-text{font-size:.78rem;line-height:1.9;color:rgba(10,10,10,.55)}
+
+/* section label */
+.section-label{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.22em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--border);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
+.section-label.kr{color:var(--blue)}
+.section-label.other{color:rgba(10,10,10,.35)}
+
+/* r-header */
+.r-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.r-title{font-family:var(--f-disp);font-size:1.5rem;letter-spacing:.06em}
 .r-count{font-family:var(--f-mono);font-size:.5rem;letter-spacing:.15em;color:rgba(10,10,10,.3)}
 
-.brand-card{
-  border:1.5px solid var(--border);padding:20px;margin-bottom:10px;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-  cursor:none;transition:border-color .2s,background .2s;
-  position:relative;overflow:hidden;
-}
-.brand-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transition:transform .25s}
-.brand-card:hover{border-color:rgba(26,86,255,.3);background:var(--blue-dim)}
-.brand-card:hover::before{transform:scaleY(1)}
-.bc-name{font-family:var(--f-disp);font-size:1.25rem;letter-spacing:.06em;margin-bottom:4px}
-.bc-tags{display:flex;gap:6px;flex-wrap:wrap}
-.bc-tag{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;color:rgba(10,10,10,.3);border:1px solid var(--border);padding:3px 8px}
-.bc-score{font-family:var(--f-disp);font-size:2rem;letter-spacing:.05em;color:var(--blue);flex-shrink:0}
-.bc-price{font-family:var(--f-mono);font-size:.5rem;letter-spacing:.1em;color:rgba(10,10,10,.4);margin-top:4px}
+/* product card */
+.prod-card{border:1.5px solid var(--border);margin-bottom:10px;overflow:hidden;position:relative;transition:border-color .2s}
+.prod-card:hover{border-color:rgba(26,86,255,.3)}
+.prod-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transition:transform .25s}
+.prod-card:hover::before{transform:scaleY(1)}
 
-.toss-btn{
-  font-family:var(--f-disp);font-size:.85rem;letter-spacing:.25em;
-  color:var(--fg);background:transparent;border:1.5px solid var(--border);
-  padding:12px 28px;cursor:none;width:100%;margin-top:16px;
-  transition:background .2s,border-color .2s,color .2s;display:flex;align-items:center;justify-content:center;gap:10px;
-}
-.toss-btn:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.toss-logo{font-family:var(--f-disp);font-size:.8rem;letter-spacing:.05em;color:var(--blue)}
-.toss-btn:hover .toss-logo{color:#5a9eff}
+.prod-inner{display:flex;align-items:stretch}
+.prod-img{width:88px;flex-shrink:0;background:linear-gradient(140deg,#e4e9f6 0%,#f0eef8 100%);position:relative;overflow:hidden;min-height:116px;display:flex;align-items:center;justify-content:center}
+.prod-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.prod-img-loader{font-family:var(--f-mono);font-size:.38rem;letter-spacing:.06em;color:rgba(10,10,10,.2);text-align:center;padding:8px;line-height:1.6}
+.prod-img .kr-badge{position:absolute;top:6px;left:6px;background:var(--blue);color:#fff;font-family:var(--f-mono);font-size:.36rem;letter-spacing:.06em;padding:2px 6px;z-index:2}
 
+.prod-body{flex:1;padding:14px 14px 14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.prod-brand{font-family:var(--f-disp);font-size:1.1rem;letter-spacing:.05em;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-name{font-size:.76rem;color:var(--fg);margin-bottom:6px;line-height:1.4;font-weight:500}
+.prod-desc{font-size:.68rem;line-height:1.75;color:rgba(10,10,10,.45);margin-bottom:8px}
+.prod-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0}
+.prod-tag{font-family:var(--f-mono);font-size:.4rem;letter-spacing:.06em;color:rgba(10,10,10,.3);border:1px solid var(--border);padding:2px 7px}
+
+.prod-price-col{padding:14px;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0}
+.prod-price-jpy{font-family:var(--f-disp);font-size:1.5rem;letter-spacing:.02em;color:var(--blue);white-space:nowrap}
+.prod-price-krw{font-family:var(--f-mono);font-size:.4rem;letter-spacing:.06em;color:rgba(10,10,10,.22);white-space:nowrap;margin-top:2px}
+
+.prod-buy-bar{border-top:1px solid var(--border)}
+.prod-buy{
+  width:100%;font-family:var(--f-disp);font-size:.82rem;letter-spacing:.25em;
+  color:var(--fg);background:transparent;border:none;
+  padding:11px 16px;cursor:none;text-align:left;
+  transition:background .2s,color .2s;display:flex;align-items:center;justify-content:space-between;
+}
+.prod-buy:hover{background:var(--blue);color:#fff}
+.prod-buy span{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;opacity:.5}
+
+/* loading skeleton */
+.skeleton{background:linear-gradient(90deg,rgba(10,10,10,.04) 25%,rgba(10,10,10,.08) 50%,rgba(10,10,10,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:2px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* error / info box */
+.info-box{border:1.5px solid rgba(26,86,255,.15);background:var(--blue-dim);padding:18px 20px}
+.info-box.err{border-color:rgba(200,0,0,.15);background:rgba(200,0,0,.03)}
+.info-box-title{font-family:var(--f-mono);font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;color:var(--blue)}
+.info-box.err .info-box-title{color:var(--red)}
+.info-box-body{font-size:.72rem;line-height:1.9;color:rgba(10,10,10,.45)}
+.info-box-body code{font-family:var(--f-mono);font-size:.65rem;background:rgba(10,10,10,.06);padding:2px 6px}
+
+/* success modal */
+.modal-backdrop{position:fixed;inset:0;z-index:8000;background:rgba(10,10,10,.82);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal-box{background:var(--bg);padding:52px 48px;max-width:480px;width:92%;border:1.5px solid var(--border);text-align:center}
+.modal-check{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;margin-bottom:20px}
+.modal-title{font-family:var(--f-disp);font-size:3rem;letter-spacing:.04em;margin-bottom:16px;line-height:1}
+.modal-body{font-size:.8rem;line-height:2;color:rgba(10,10,10,.5);margin-bottom:28px}
+.modal-close{font-family:var(--f-disp);font-size:.88rem;letter-spacing:.25em;color:#fff;background:var(--blue);border:none;padding:12px 44px;cursor:none;transition:opacity .2s}
+.modal-close:hover{opacity:.85}
+
+/* noise overlay */
 .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
 </style>
 </head>
@@ -129,23 +180,48 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 
 <div class="hero">
   <div>
-    <div style="font-family:var(--f-mono);font-size:.5rem;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;margin-bottom:16px">Card 01 — AI Fashion Curator</div>
+    <div style="font-family:var(--f-mono);font-size:.5rem;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;margin-bottom:16px">K-POP IDOL AIRPORT FASHION</div>
     <h1 class="hero-title">AI 패션<br/><em>추천</em></h1>
+    <div id="rate-badge">
+      <span class="live-dot"></span>
+      <span id="rate-text">환율 로딩 중...</span>
+    </div>
   </div>
-  <p class="hero-sub">키, 체형, 원하는 스타일과 색상을 입력하면 AI가 한국 브랜드를 추천합니다. 마음에 든 아이템은 Toss로 바로 구매하세요.</p>
+  <p class="hero-sub">K-POP 아이돌의 공항 패션을 참고한 AI 스타일 큐레이션. 체형과 취향을 입력하면 한국 브랜드를 우선으로 추천합니다. 가격은 실시간 엔화(¥)로 표시됩니다.</p>
 </div>
 
 <div class="divider"></div>
 
 <div class="section">
+  <!-- ── 왼쪽: 입력 폼 ──────────────────────────────────── -->
   <div class="form-col">
-    <div class="f-label">신체 정보</div>
-    <div class="f-row">
-      <input class="f-input" placeholder="키 (cm)" type="number"/>
-      <input class="f-input" placeholder="체중 (kg)" type="number"/>
+
+    <!-- 이메일 (결제 확인 메일) -->
+    <div class="email-wrap">
+      <div class="f-label">이메일 주소 (결제 완료 시 확인 메일 발송)</div>
+      <input id="input-email" class="f-input" type="email" placeholder="your@email.com" autocomplete="email"/>
+      <div class="email-note">결제 후 이 주소로 주문 확인 이메일이 발송됩니다</div>
     </div>
 
-    <div class="f-label">스타일</div>
+    <!-- 신체 정보 -->
+    <div class="f-label">신체 정보</div>
+    <div class="f-row">
+      <input id="input-height" class="f-input" placeholder="키 (cm)" type="number" min="140" max="210"/>
+      <input id="input-weight" class="f-input" placeholder="체중 (kg)" type="number" min="40" max="150"/>
+    </div>
+
+    <!-- 체형 -->
+    <div class="f-label">체형</div>
+    <div class="tag-group" id="tg-body">
+      <button class="tag">마른 체형</button>
+      <button class="tag on">표준</button>
+      <button class="tag">근육형</button>
+      <button class="tag">통통</button>
+      <button class="tag">마른 비만</button>
+    </div>
+
+    <!-- 스타일 -->
+    <div class="f-label">원하는 스타일</div>
     <div class="tag-group" id="tg-style">
       <button class="tag on">미니멀</button>
       <button class="tag">스트리트</button>
@@ -154,8 +230,10 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
       <button class="tag">포멀</button>
       <button class="tag">Y2K</button>
       <button class="tag">아메카지</button>
+      <button class="tag">럭셔리 캐주얼</button>
     </div>
 
+    <!-- 선호 색상 -->
     <div class="f-label">선호 색상</div>
     <div class="tag-group" id="tg-color">
       <button class="tag on">블랙</button>
@@ -165,88 +243,80 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
       <button class="tag">카키</button>
       <button class="tag">그레이</button>
       <button class="tag">브라운</button>
+      <button class="tag">멀티 컬러</button>
     </div>
 
-    <div class="f-label">예산</div>
-    <div class="tag-group">
+    <!-- 예산 (한화 기준 → 자동 엔화 변환) -->
+    <div class="f-label">예산 (한화 기준, 엔화로 자동 변환)</div>
+    <div class="tag-group" id="tg-budget">
       <button class="tag">~5만원</button>
       <button class="tag on">5~15만원</button>
       <button class="tag">15~30만원</button>
       <button class="tag">30만원+</button>
     </div>
 
-    <button class="submit-btn">AI 추천 실행하기</button>
+    <button class="submit-btn" id="btn-submit">K-POP 스타일 AI 추천 받기 →</button>
   </div>
 
-  <div class="result-col">
-    <div class="r-header">
-      <div class="r-title">추천 브랜드</div>
-      <div class="r-count">3 RESULTS</div>
-    </div>
-
-    <div class="brand-card">
-      <div>
-        <div class="bc-name">MMMG</div>
-        <div class="bc-tags">
-          <span class="bc-tag">미니멀</span>
-          <span class="bc-tag">서울</span>
-          <span class="bc-tag">문구·라이프스타일</span>
-        </div>
-        <div class="bc-price">티셔츠 28,000 — 65,000원</div>
-      </div>
-      <div style="text-align:right">
-        <div class="bc-score">98</div>
-        <div style="font-family:var(--f-mono);font-size:.42rem;letter-spacing:.08em;color:rgba(10,10,10,.25)">MATCH</div>
+  <!-- ── 오른쪽: 결과 영역 ──────────────────────────────── -->
+  <div class="result-col" id="result-col">
+    <div class="info-box">
+      <div class="info-box-title">✦ 사용 방법</div>
+      <div class="info-box-body">
+        이메일과 체형 정보를 입력한 후 "K-POP 스타일 AI 추천 받기" 버튼을 누르세요.<br/>
+        K-POP 아이돌 공항 패션 스타일을 참고한 한국 브랜드 추천이 표시됩니다.<br/>
+        가격은 <strong>Yahoo Finance 실시간 환율</strong>로 엔화(¥) 변환됩니다.
       </div>
     </div>
-
-    <div class="brand-card">
-      <div>
-        <div class="bc-name">ANDERSSON BELL</div>
-        <div class="bc-tags">
-          <span class="bc-tag">컨템포러리</span>
-          <span class="bc-tag">서울</span>
-          <span class="bc-tag">젠더리스</span>
-        </div>
-        <div class="bc-price">아우터 120,000 — 380,000원</div>
-      </div>
-      <div style="text-align:right">
-        <div class="bc-score">94</div>
-        <div style="font-family:var(--f-mono);font-size:.42rem;letter-spacing:.08em;color:rgba(10,10,10,.25)">MATCH</div>
-      </div>
-    </div>
-
-    <div class="brand-card">
-      <div>
-        <div class="bc-name">LEESLE</div>
-        <div class="bc-tags">
-          <span class="bc-tag">캐주얼</span>
-          <span class="bc-tag">성수</span>
-          <span class="bc-tag">스트릿</span>
-        </div>
-        <div class="bc-price">팬츠 45,000 — 95,000원</div>
-      </div>
-      <div style="text-align:right">
-        <div class="bc-score">89</div>
-        <div style="font-family:var(--f-mono);font-size:.42rem;letter-spacing:.08em;color:rgba(10,10,10,.25)">MATCH</div>
-      </div>
-    </div>
-
-    <button class="toss-btn">
-      <span class="toss-logo">toss</span>로 구매하기
-    </button>
   </div>
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG — 백엔드 URL 및 EmailJS 설정
+   EmailJS 설정: https://www.emailjs.com/
+   1. 계정 생성 → Gmail 서비스 추가
+   2. 템플릿 생성 (변수: {{to_email}}, {{brand_name}}, {{product_name}}, {{price_jpy}}, {{order_date}})
+   3. 아래 SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY 값을 입력
+═══════════════════════════════════════════════════════════ */
+const API_BASE       = 'http://localhost:8000';
+const EMAILJS_SVC    = 'YOUR_SERVICE_ID';    // EmailJS 서비스 ID
+const EMAILJS_TPL    = 'YOUR_TEMPLATE_ID';   // EmailJS 템플릿 ID
+const EMAILJS_KEY    = 'YOUR_PUBLIC_KEY';    // EmailJS Public Key
+
+/* ── 상태 ──────────────────────────────────────────────── */
+let exchangeRate = 0.0973;  // KRW→JPY fallback
+let productStore = {};       // 구매 버튼용 상품 데이터
+
+/* ══ 커서 ══════════════════════════════════════════════════ */
 const cr=document.getElementById('cr'),cd=document.getElementById('cd');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'});
 (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
-document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'))});
+function applyCursor(root){
+  (root||document).querySelectorAll('a,button,.tag,.prod-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+  });
+}
+applyCursor();
 
-document.querySelectorAll('.tag').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('on')));
+/* ══ 태그 토글 ══════════════════════════════════════════════ */
+document.querySelectorAll('.tag-group').forEach(group=>{
+  group.querySelectorAll('.tag').forEach(t=>{
+    t.addEventListener('click',()=>{
+      const isBodyGroup = group.id === 'tg-body' || group.id === 'tg-budget';
+      if(isBodyGroup){
+        group.querySelectorAll('.tag').forEach(x=>x.classList.remove('on'));
+        t.classList.add('on');
+      } else {
+        t.classList.toggle('on');
+      }
+    });
+  });
+});
 
+/* ══ 페이지 전환 ════════════════════════════════════════════ */
 const trans=document.getElementById('trans');
 function nav(href,label){
   document.getElementById('trans-lbl').textContent=label||'SEOULFIT';
@@ -254,6 +324,315 @@ function nav(href,label){
   setTimeout(()=>window.location.href=href,580);
 }
 document.querySelectorAll('[data-href]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();nav(el.dataset.href,el.dataset.label)}));
+
+/* ══ 환율 로드 (Yahoo Finance) ══════════════════════════════ */
+async function fetchExchangeRate(){
+  try{
+    const r=await fetch(`${API_BASE}/api/exchange-rate`);
+    if(!r.ok) throw new Error('exchange rate error');
+    const d=await r.json();
+    exchangeRate=d.krw_to_jpy;
+    document.getElementById('rate-text').textContent=
+      `1 KRW = ¥${exchangeRate.toFixed(4)} · Yahoo Finance 실시간`;
+  }catch{
+    document.getElementById('rate-text').textContent=
+      `1 KRW = ¥${exchangeRate.toFixed(4)} · 기본값 적용됨`;
+  }
+}
+
+function krwToJpy(krw){ return Math.round(krw*exchangeRate); }
+function fmtJpy(v){ return `¥${v.toLocaleString('ja-JP')}`; }
+
+/* ══ 제출 ════════════════════════════════════════════════════ */
+document.getElementById('btn-submit').addEventListener('click', async()=>{
+  const email  = document.getElementById('input-email').value.trim();
+  const height = parseInt(document.getElementById('input-height').value)||null;
+  const weight = parseInt(document.getElementById('input-weight').value)||null;
+
+  if(!email){ alert('이메일 주소를 입력해주세요.'); document.getElementById('input-email').focus(); return; }
+
+  const bodyType = [...document.querySelectorAll('#tg-body .tag.on')].map(t=>t.textContent)[0]||'표준';
+  const styles   = [...document.querySelectorAll('#tg-style .tag.on')].map(t=>t.textContent);
+  const colors   = [...document.querySelectorAll('#tg-color .tag.on')].map(t=>t.textContent);
+  const budget   = [...document.querySelectorAll('#tg-budget .tag.on')].map(t=>t.textContent)[0]||'';
+
+  showLoading();
+  document.getElementById('btn-submit').disabled=true;
+
+  try{
+    const r=await fetch(`${API_BASE}/api/recommend`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({height,weight,body_type:bodyType,styles,colors,budget_krw:budget,email})
+    });
+    if(!r.ok){
+      const err=await r.json().catch(()=>({}));
+      throw new Error(err.detail||'서버 오류');
+    }
+    const data=await r.json();
+    renderResults(data,email);
+    loadImages(data);    // 이미지 비동기 로딩
+  }catch(e){
+    showError(e.message);
+  }finally{
+    document.getElementById('btn-submit').disabled=false;
+  }
+});
+
+/* ══ 로딩 표시 ══════════════════════════════════════════════ */
+function showLoading(){
+  document.getElementById('result-col').innerHTML=`
+    <div style="padding:40px 0">
+      <div class="skeleton" style="height:80px;margin-bottom:16px"></div>
+      <div class="skeleton" style="height:116px;margin-bottom:10px"></div>
+      <div class="skeleton" style="height:116px;margin-bottom:10px"></div>
+      <div class="skeleton" style="height:116px"></div>
+    </div>
+    <div style="font-family:var(--f-mono);font-size:.46rem;letter-spacing:.18em;color:rgba(10,10,10,.3);text-align:center;margin-top:16px">
+      K-POP 아이돌 스타일 분석 중...
+    </div>`;
+}
+
+/* ══ 결과 렌더 ══════════════════════════════════════════════ */
+function renderResults(data,email){
+  const totalCount=(data.korean_brands?.length||0)+(data.other_brands?.length||0);
+  productStore={};
+
+  let html=`
+    <!-- 아이돌 스타일 레퍼런스 -->
+    <div class="idol-banner">
+      <div class="idol-banner-header">
+        <span>★</span>
+        <span>${esc(data.idol_name||'K-POP')} 스타일 레퍼런스</span>
+      </div>
+      <div class="idol-banner-text">${esc(data.idol_style_ref||'')}</div>
+    </div>
+
+    <!-- 요약 헤더 -->
+    <div class="r-header">
+      <div class="r-title">추천 아이템</div>
+      <div class="r-count">${totalCount} ITEMS · 가격 엔화(¥) 표시</div>
+    </div>`;
+
+  /* 한국 브랜드 */
+  if(data.korean_brands?.length){
+    html+=`<div class="section-label kr">▲ Korean Brands — Priority</div>`;
+    data.korean_brands.forEach((p,i)=>{
+      html+=buildCard(p,true,`k${i}`,email);
+    });
+  }
+
+  /* 기타 브랜드 */
+  if(data.other_brands?.length){
+    html+=`<div class="section-label other" style="margin-top:28px">○ Other Brands</div>`;
+    data.other_brands.forEach((p,i)=>{
+      html+=buildCard(p,false,`o${i}`,email);
+    });
+  }
+
+  document.getElementById('result-col').innerHTML=html;
+  applyCursor(document.getElementById('result-col'));
+}
+
+function buildCard(p,isKorean,uid,email){
+  const priceJpy=krwToJpy(p.price_krw||0);
+  const key=`prod_${uid}`;
+  productStore[key]={
+    brand:p.brand,name:p.product_name,
+    priceJpy,imageUrl:'',email
+  };
+
+  const tagsHtml=(p.style_tags||[]).map(t=>`<span class="prod-tag">${esc(t)}</span>`).join('');
+  const krBadge=isKorean?'<div class="kr-badge">KR</div>':'';
+
+  return `
+    <div class="prod-card">
+      <div class="prod-inner">
+        <div class="prod-img" id="img_${uid}">
+          ${krBadge}
+          <div class="prod-img-loader">이미지<br/>로딩 중</div>
+        </div>
+        <div class="prod-body">
+          <div>
+            <div class="prod-brand">${esc(p.brand)}</div>
+            <div class="prod-name">${esc(p.product_name)}</div>
+            <div class="prod-desc">${esc(p.product_description)}</div>
+            <div class="prod-tags">${tagsHtml}</div>
+          </div>
+        </div>
+        <div class="prod-price-col">
+          <div>
+            <div class="prod-price-jpy">${fmtJpy(priceJpy)}</div>
+            <div class="prod-price-krw">≈ ${(p.price_krw||0).toLocaleString()}원</div>
+          </div>
+        </div>
+      </div>
+      <div class="prod-buy-bar">
+        <button class="prod-buy" onclick="purchaseProduct('${key}')">
+          구매하기
+          <span>Stripe · カード / コンビニ →</span>
+        </button>
+      </div>
+    </div>`;
+}
+
+/* ══ 이미지 비동기 로딩 ════════════════════════════════════ */
+async function loadImages(data){
+  const all=[
+    ...(data.korean_brands||[]).map((p,i)=>({...p,uid:`k${i}`})),
+    ...(data.other_brands||[]).map((p,i)=>({...p,uid:`o${i}`})),
+  ];
+  for(const p of all){
+    try{
+      const r=await fetch(`${API_BASE}/api/generate-image`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({prompt:p.image_prompt||p.product_type||'clothing item'})
+      });
+      if(!r.ok) continue;
+      const d=await r.json();
+      const container=document.getElementById(`img_${p.uid}`);
+      if(container&&d.image_url){
+        const img=document.createElement('img');
+        img.src=d.image_url;
+        img.alt=p.product_name;
+        container.innerHTML='';
+        if(p.is_korean!==false){
+          const badge=document.createElement('div');
+          badge.className='kr-badge';badge.textContent='KR';
+          container.appendChild(badge);
+        }
+        container.appendChild(img);
+        // 이미지 URL을 productStore에 저장
+        const key=`prod_${p.uid}`;
+        if(productStore[key]) productStore[key].imageUrl=d.image_url;
+      }
+    }catch(e){
+      console.warn('Image generation skipped:',e.message);
+    }
+    await new Promise(res=>setTimeout(res,400)); // DALL-E rate limit 방지
+  }
+}
+
+/* ══ 구매 (Stripe Checkout) ════════════════════════════════ */
+async function purchaseProduct(key){
+  const p=productStore[key];
+  if(!p){return;}
+  if(!p.email){alert('이메일 주소를 입력해주세요.');return;}
+
+  const btn=event.target.closest('.prod-buy');
+  const origText=btn?btn.innerHTML:'';
+  if(btn){btn.textContent='결제 페이지 이동 중...';btn.disabled=true;}
+
+  try{
+    const r=await fetch(`${API_BASE}/api/checkout`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        product_name:p.name,
+        brand:p.brand,
+        price_jpy:p.priceJpy,
+        image_url:p.imageUrl||undefined,
+        email:p.email,
+      })
+    });
+    if(!r.ok){
+      const err=await r.json().catch(()=>({}));
+      throw new Error(err.detail||'결제 서버 오류');
+    }
+    const d=await r.json();
+    if(d.checkout_url){
+      window.location.href=d.checkout_url;
+    }
+  }catch(e){
+    alert(`결제 오류: ${e.message}\n\n백엔드가 실행 중인지 확인해주세요.`);
+    if(btn){btn.innerHTML=origText;btn.disabled=false;}
+  }
+}
+
+/* ══ 결제 완료 처리 ══════════════════════════════════════════ */
+function checkPaymentSuccess(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('payment')!=='success') return;
+
+  const email   =decodeURIComponent(params.get('email')||'');
+  const product =decodeURIComponent(params.get('product')||'');
+  const brand   =decodeURIComponent(params.get('brand')||'');
+  const price   =parseInt(params.get('price')||'0');
+
+  showSuccessModal(email,product,brand,price);
+  sendConfirmationEmail(email,product,brand,price);
+  window.history.replaceState({},'',window.location.pathname);
+}
+
+function showSuccessModal(email,product,brand,price){
+  const backdrop=document.createElement('div');
+  backdrop.className='modal-backdrop';
+  backdrop.innerHTML=`
+    <div class="modal-box">
+      <div class="modal-check">✓ Payment Complete · お支払い完了</div>
+      <div class="modal-title">결제 완료</div>
+      <div class="modal-body">
+        <strong>${esc(brand)}</strong><br/>
+        ${esc(product)}<br/>
+        <span style="font-family:var(--f-disp);font-size:1.5rem;color:var(--blue)">${fmtJpy(price)}</span><br/><br/>
+        <span style="font-size:.72rem">${esc(email)} 로<br/>결제 확인 이메일을 발송했습니다</span>
+      </div>
+      <button class="modal-close" onclick="this.closest('.modal-backdrop').remove()">닫기</button>
+    </div>`;
+  document.body.appendChild(backdrop);
+  applyCursor(backdrop);
+}
+
+async function sendConfirmationEmail(email,product,brand,price){
+  if(typeof emailjs==='undefined'||EMAILJS_KEY==='YOUR_PUBLIC_KEY'){
+    console.warn('[EmailJS] 설정이 필요합니다. EMAILJS_SVC / EMAILJS_TPL / EMAILJS_KEY를 설정하세요.');
+    return;
+  }
+  try{
+    emailjs.init(EMAILJS_KEY);
+    await emailjs.send(EMAILJS_SVC,EMAILJS_TPL,{
+      to_email   : email,
+      brand_name : brand,
+      product_name:product,
+      price_jpy  : fmtJpy(price),
+      order_date : new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}),
+    });
+    console.log('[EmailJS] 확인 이메일 발송 완료');
+  }catch(e){
+    console.error('[EmailJS] 이메일 발송 실패:',e);
+  }
+}
+
+/* ══ 오류 표시 ══════════════════════════════════════════════ */
+function showError(msg){
+  document.getElementById('result-col').innerHTML=`
+    <div class="info-box err">
+      <div class="info-box-title">⚠ 오류 발생</div>
+      <div class="info-box-body">
+        ${esc(msg||'알 수 없는 오류')}<br/><br/>
+        백엔드 서버가 실행 중인지 확인해주세요:<br/>
+        <code>cd backend && uvicorn main:app --reload</code>
+      </div>
+    </div>`;
+}
+
+/* ── HTML 이스케이프 helper ───────────────────────────────── */
+function esc(s){
+  if(!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* ══ 초기화 ════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded',()=>{
+  fetchExchangeRate();
+  checkPaymentSuccess();
+});
 </script>
 </body>
 </html>
