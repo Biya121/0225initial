@@ -5,12 +5,12 @@
 <title>AI 패션 추천 — SEOULFIT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<!-- EmailJS SDK: https://www.emailjs.com/ -->
+<!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f8f7f4;--fg:#0a0a0a;--blue:#1a56ff;--blue-dim:rgba(26,86,255,.08);
+  --bg:#f8f7f4;--fg:#0a0a0a;--blue:#1a56ff;--blue-dim:rgba(26,86,255,.07);
   --border:rgba(10,10,10,.1);--red:#e02020;
   --f-disp:'Bebas Neue',sans-serif;--f-body:'Noto Sans KR',sans-serif;--f-mono:'DM Mono',monospace;
 }
@@ -42,9 +42,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 .hero{padding:130px 12vw 60px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap}
 .hero-title{font-family:var(--f-disp);font-size:clamp(4rem,8vw,9rem);line-height:.88;letter-spacing:-.01em}
 .hero-title em{color:var(--blue);font-style:normal}
-.hero-sub{font-size:.75rem;line-height:2;color:rgba(10,10,10,.45);max-width:280px;letter-spacing:.02em}
+.hero-sub{font-size:.75rem;line-height:2;color:rgba(10,10,10,.45);max-width:300px;letter-spacing:.02em}
 
-/* rate badge */
+/* 환율 뱃지 */
 #rate-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);padding:6px 14px;margin-top:12px;font-family:var(--f-mono);font-size:.44rem;letter-spacing:.1em;color:rgba(10,10,10,.4)}
 #rate-badge .live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -58,19 +58,14 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 
 /* form */
 .f-label{font-family:var(--f-mono);font-size:.48rem;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;margin-bottom:10px}
-.f-input{
-  width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);
-  padding:10px 0;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;
-  color:var(--fg);outline:none;transition:border-color .2s;margin-bottom:20px;cursor:none;
-}
+.f-input{width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:10px 0;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--fg);outline:none;transition:border-color .2s;margin-bottom:20px;cursor:none}
 .f-input:focus{border-color:var(--blue)}
 .f-input::placeholder{color:rgba(10,10,10,.2)}
 .f-row{display:flex;gap:16px}
 .f-row .f-input{flex:1}
 
-/* email input (prominent) */
+/* 이메일 박스 */
 .email-wrap{background:var(--blue-dim);border:1.5px solid rgba(26,86,255,.2);padding:14px 16px;margin-bottom:24px}
-.email-wrap .f-label{color:var(--blue)}
 .email-wrap .f-input{border-bottom-color:rgba(26,86,255,.25);margin-bottom:0}
 .email-wrap .f-input:focus{border-color:var(--blue)}
 .email-note{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.06em;color:rgba(26,86,255,.5);margin-top:6px}
@@ -81,77 +76,80 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 .tag:hover,.tag.on{border-color:var(--blue);color:var(--fg);background:var(--blue-dim)}
 
 /* submit */
-.submit-btn{
-  font-family:var(--f-disp);font-size:.9rem;letter-spacing:.28em;
-  color:#fff;background:var(--blue);border:none;
-  padding:14px 40px;cursor:none;width:100%;
-  transition:opacity .2s;margin-top:8px;
-}
+.submit-btn{font-family:var(--f-disp);font-size:.9rem;letter-spacing:.28em;color:#fff;background:var(--blue);border:none;padding:14px 40px;cursor:none;width:100%;transition:opacity .2s;margin-top:8px}
 .submit-btn:hover{opacity:.85}
-.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+.submit-btn:disabled{opacity:.4}
 
-/* ── result col ────────────────────────────────────────────── */
+/* ── result ───────────────────────────────────────────────── */
 .result-col{min-height:200px}
 
-/* idol style banner */
-.idol-banner{border:1.5px solid rgba(26,86,255,.2);background:var(--blue-dim);padding:18px 20px;margin-bottom:20px}
-.idol-banner-header{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+/* 아이돌 배너 */
+.idol-banner{border:1.5px solid rgba(26,86,255,.18);background:var(--blue-dim);padding:18px 20px;margin-bottom:20px}
+.idol-banner-kw{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .idol-banner-text{font-size:.78rem;line-height:1.9;color:rgba(10,10,10,.55)}
 
-/* section label */
-.section-label{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.22em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--border);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
-.section-label.kr{color:var(--blue)}
-.section-label.other{color:rgba(10,10,10,.35)}
+/* 섹션 구분 */
+.sec-label{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.22em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--border);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
+.sec-label.kr{color:var(--blue)}
+.sec-label.other{color:rgba(10,10,10,.32)}
 
-/* r-header */
 .r-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .r-title{font-family:var(--f-disp);font-size:1.5rem;letter-spacing:.06em}
 .r-count{font-family:var(--f-mono);font-size:.5rem;letter-spacing:.15em;color:rgba(10,10,10,.3)}
 
-/* product card */
-.prod-card{border:1.5px solid var(--border);margin-bottom:10px;overflow:hidden;position:relative;transition:border-color .2s}
-.prod-card:hover{border-color:rgba(26,86,255,.3)}
-.prod-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transition:transform .25s}
+/* 상품 카드 */
+.prod-card{border:1.5px solid var(--border);margin-bottom:10px;overflow:hidden;transition:border-color .25s;position:relative}
+.prod-card:hover{border-color:rgba(26,86,255,.35)}
+.prod-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transform-origin:bottom;transition:transform .25s}
 .prod-card:hover::before{transform:scaleY(1)}
 
 .prod-inner{display:flex;align-items:stretch}
-.prod-img{width:88px;flex-shrink:0;background:linear-gradient(140deg,#e4e9f6 0%,#f0eef8 100%);position:relative;overflow:hidden;min-height:116px;display:flex;align-items:center;justify-content:center}
-.prod-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.prod-img-loader{font-family:var(--f-mono);font-size:.38rem;letter-spacing:.06em;color:rgba(10,10,10,.2);text-align:center;padding:8px;line-height:1.6}
-.prod-img .kr-badge{position:absolute;top:6px;left:6px;background:var(--blue);color:#fff;font-family:var(--f-mono);font-size:.36rem;letter-spacing:.06em;padding:2px 6px;z-index:2}
 
-.prod-body{flex:1;padding:14px 14px 14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-.prod-brand{font-family:var(--f-disp);font-size:1.1rem;letter-spacing:.05em;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prod-name{font-size:.76rem;color:var(--fg);margin-bottom:6px;line-height:1.4;font-weight:500}
-.prod-desc{font-size:.68rem;line-height:1.75;color:rgba(10,10,10,.45);margin-bottom:8px}
-.prod-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0}
+/* 이미지 박스 (무신사 실제 이미지) */
+.prod-img{width:96px;flex-shrink:0;position:relative;overflow:hidden;min-height:120px;background:#ececec}
+.prod-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.prod-img-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.38rem;letter-spacing:.06em;color:rgba(10,10,10,.22);text-align:center;line-height:1.5;padding:8px}
+.kr-badge{position:absolute;top:6px;left:6px;background:var(--blue);color:#fff;font-family:var(--f-mono);font-size:.36rem;letter-spacing:.06em;padding:2px 6px;z-index:2}
+.musinsa-badge{position:absolute;bottom:6px;left:6px;background:rgba(10,10,10,.65);color:#fff;font-family:var(--f-mono);font-size:.34rem;letter-spacing:.04em;padding:2px 5px;z-index:2;backdrop-filter:blur(4px)}
+
+.prod-body{flex:1;padding:13px 13px 13px 15px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.prod-brand{font-family:var(--f-disp);font-size:1.05rem;letter-spacing:.05em;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-name{font-size:.74rem;color:var(--fg);margin-bottom:5px;line-height:1.4;font-weight:500;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.prod-desc{font-size:.67rem;line-height:1.75;color:rgba(10,10,10,.42);margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.prod-tags{display:flex;flex-wrap:wrap;gap:4px}
 .prod-tag{font-family:var(--f-mono);font-size:.4rem;letter-spacing:.06em;color:rgba(10,10,10,.3);border:1px solid var(--border);padding:2px 7px}
 
-.prod-price-col{padding:14px;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0}
-.prod-price-jpy{font-family:var(--f-disp);font-size:1.5rem;letter-spacing:.02em;color:var(--blue);white-space:nowrap}
+.prod-price-col{padding:13px;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0;min-width:80px}
+.prod-price-jpy{font-family:var(--f-disp);font-size:1.45rem;letter-spacing:.02em;color:var(--blue);white-space:nowrap}
 .prod-price-krw{font-family:var(--f-mono);font-size:.4rem;letter-spacing:.06em;color:rgba(10,10,10,.22);white-space:nowrap;margin-top:2px}
 
-.prod-buy-bar{border-top:1px solid var(--border)}
-.prod-buy{
-  width:100%;font-family:var(--f-disp);font-size:.82rem;letter-spacing:.25em;
-  color:var(--fg);background:transparent;border:none;
-  padding:11px 16px;cursor:none;text-align:left;
-  transition:background .2s,color .2s;display:flex;align-items:center;justify-content:space-between;
-}
+/* 구매 바 */
+.prod-buy-bar{border-top:1px solid var(--border);display:flex}
+.prod-buy{flex:1;font-family:var(--f-disp);font-size:.8rem;letter-spacing:.22em;color:var(--fg);background:transparent;border:none;padding:11px 14px;cursor:none;text-align:left;transition:background .2s,color .2s;display:flex;align-items:center;justify-content:space-between}
 .prod-buy:hover{background:var(--blue);color:#fff}
-.prod-buy span{font-family:var(--f-mono);font-size:.44rem;letter-spacing:.08em;opacity:.5}
+.prod-buy span{font-family:var(--f-mono);font-size:.42rem;letter-spacing:.06em;opacity:.45}
+.prod-view{width:52px;border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;font-family:var(--f-mono);font-size:.38rem;letter-spacing:.04em;color:rgba(10,10,10,.35);transition:background .2s,color .2s;flex-shrink:0}
+.prod-view:hover{background:rgba(10,10,10,.06);color:var(--fg)}
+
+/* 해외브랜드 이미지 플레이스홀더 */
+.brand-initial{width:96px;height:100%;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--fg);color:#fff;font-family:var(--f-disp);font-size:1.8rem;letter-spacing:.04em;flex-shrink:0}
+.brand-initial small{font-family:var(--f-mono);font-size:.35rem;letter-spacing:.08em;opacity:.4;margin-top:4px;text-transform:uppercase}
 
 /* loading skeleton */
-.skeleton{background:linear-gradient(90deg,rgba(10,10,10,.04) 25%,rgba(10,10,10,.08) 50%,rgba(10,10,10,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:2px}
+.skeleton{background:linear-gradient(90deg,rgba(10,10,10,.04) 25%,rgba(10,10,10,.09) 50%,rgba(10,10,10,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:2px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* error / info box */
+/* info/error box */
 .info-box{border:1.5px solid rgba(26,86,255,.15);background:var(--blue-dim);padding:18px 20px}
 .info-box.err{border-color:rgba(200,0,0,.15);background:rgba(200,0,0,.03)}
 .info-box-title{font-family:var(--f-mono);font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;color:var(--blue)}
 .info-box.err .info-box-title{color:var(--red)}
 .info-box-body{font-size:.72rem;line-height:1.9;color:rgba(10,10,10,.45)}
 .info-box-body code{font-family:var(--f-mono);font-size:.65rem;background:rgba(10,10,10,.06);padding:2px 6px}
+
+/* source chip */
+.source-chip{font-family:var(--f-mono);font-size:.38rem;letter-spacing:.08em;border:1px solid var(--border);padding:2px 8px;color:rgba(10,10,10,.3)}
+.source-chip.musinsa{border-color:rgba(26,86,255,.25);color:var(--blue);background:var(--blue-dim)}
 
 /* success modal */
 .modal-backdrop{position:fixed;inset:0;z-index:8000;background:rgba(10,10,10,.82);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
@@ -162,7 +160,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 .modal-close{font-family:var(--f-disp);font-size:.88rem;letter-spacing:.25em;color:#fff;background:var(--blue);border:none;padding:12px 44px;cursor:none;transition:opacity .2s}
 .modal-close:hover{opacity:.85}
 
-/* noise overlay */
+/* noise */
 .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.018;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
 </style>
 </head>
@@ -174,7 +172,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 
 <header>
   <a class="hd-logo" href="index.html" data-href="index.html" data-label="SEOULFIT">SEOUL<em>FIT</em></a>
-  <span class="hd-tag">AI 패션 추천</span>
+  <span class="hd-tag">K-POP 공항 패션 AI 추천</span>
   <button class="hd-back" data-href="index.html" data-label="SEOULFIT">← 메인으로</button>
 </header>
 
@@ -187,18 +185,18 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
       <span id="rate-text">환율 로딩 중...</span>
     </div>
   </div>
-  <p class="hero-sub">K-POP 아이돌의 공항 패션을 참고한 AI 스타일 큐레이션. 체형과 취향을 입력하면 한국 브랜드를 우선으로 추천합니다. 가격은 실시간 엔화(¥)로 표시됩니다.</p>
+  <p class="hero-sub">K-POP 아이돌 공항 패션 기반 스타일 큐레이션. 무신사 실제 상품 데이터로 추천하며, 가격은 Yahoo Finance 실시간 환율로 엔화(¥) 변환됩니다.</p>
 </div>
 
 <div class="divider"></div>
 
 <div class="section">
-  <!-- ── 왼쪽: 입력 폼 ──────────────────────────────────── -->
+  <!-- ── 왼쪽: 입력 폼 ────────────────────────────────────── -->
   <div class="form-col">
 
-    <!-- 이메일 (결제 확인 메일) -->
+    <!-- 이메일 -->
     <div class="email-wrap">
-      <div class="f-label">이메일 주소 (결제 완료 시 확인 메일 발송)</div>
+      <div class="f-label">이메일 주소 — 결제 완료 메일 수신</div>
       <input id="input-email" class="f-input" type="email" placeholder="your@email.com" autocomplete="email"/>
       <div class="email-note">결제 후 이 주소로 주문 확인 이메일이 발송됩니다</div>
     </div>
@@ -233,7 +231,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
       <button class="tag">럭셔리 캐주얼</button>
     </div>
 
-    <!-- 선호 색상 -->
+    <!-- 색상 -->
     <div class="f-label">선호 색상</div>
     <div class="tag-group" id="tg-color">
       <button class="tag on">블랙</button>
@@ -243,11 +241,11 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
       <button class="tag">카키</button>
       <button class="tag">그레이</button>
       <button class="tag">브라운</button>
-      <button class="tag">멀티 컬러</button>
+      <button class="tag">멀티</button>
     </div>
 
-    <!-- 예산 (한화 기준 → 자동 엔화 변환) -->
-    <div class="f-label">예산 (한화 기준, 엔화로 자동 변환)</div>
+    <!-- 예산 -->
+    <div class="f-label">예산 (한화 기준 → 자동 엔화 변환)</div>
     <div class="tag-group" id="tg-budget">
       <button class="tag">~5만원</button>
       <button class="tag on">5~15만원</button>
@@ -258,14 +256,14 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
     <button class="submit-btn" id="btn-submit">K-POP 스타일 AI 추천 받기 →</button>
   </div>
 
-  <!-- ── 오른쪽: 결과 영역 ──────────────────────────────── -->
+  <!-- ── 오른쪽: 결과 ──────────────────────────────────────── -->
   <div class="result-col" id="result-col">
     <div class="info-box">
       <div class="info-box-title">✦ 사용 방법</div>
       <div class="info-box-body">
-        이메일과 체형 정보를 입력한 후 "K-POP 스타일 AI 추천 받기" 버튼을 누르세요.<br/>
-        K-POP 아이돌 공항 패션 스타일을 참고한 한국 브랜드 추천이 표시됩니다.<br/>
-        가격은 <strong>Yahoo Finance 실시간 환율</strong>로 엔화(¥) 변환됩니다.
+        이메일과 체형 정보를 입력한 후 추천 버튼을 누르세요.<br/>
+        무신사 실제 상품 이미지 & 데이터로 K-POP 공항 패션 스타일을 추천합니다.<br/>
+        가격은 <strong>Yahoo Finance 실시간 KRW→JPY</strong> 환율로 자동 변환됩니다.
       </div>
     </div>
   </div>
@@ -273,197 +271,246 @@ header{position:fixed;top:0;left:0;right:0;z-index:400;height:52px;display:flex;
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   CONFIG — 백엔드 URL 및 EmailJS 설정
+   CONFIG
    EmailJS 설정: https://www.emailjs.com/
-   1. 계정 생성 → Gmail 서비스 추가
-   2. 템플릿 생성 (변수: {{to_email}}, {{brand_name}}, {{product_name}}, {{price_jpy}}, {{order_date}})
-   3. 아래 SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY 값을 입력
+   1. 계정 생성 → Email Services에서 Gmail 추가
+   2. Email Templates에서 템플릿 생성
+      변수: {{to_email}}, {{brand_name}}, {{product_name}}, {{price_jpy}}, {{order_date}}
+   3. 아래 세 값 입력
 ═══════════════════════════════════════════════════════════ */
-const API_BASE       = 'http://localhost:8000';
-const EMAILJS_SVC    = 'YOUR_SERVICE_ID';    // EmailJS 서비스 ID
-const EMAILJS_TPL    = 'YOUR_TEMPLATE_ID';   // EmailJS 템플릿 ID
-const EMAILJS_KEY    = 'YOUR_PUBLIC_KEY';    // EmailJS Public Key
+const API_BASE    = 'http://localhost:8000';
+const EMAILJS_SVC = 'YOUR_SERVICE_ID';
+const EMAILJS_TPL = 'YOUR_TEMPLATE_ID';
+const EMAILJS_KEY = 'YOUR_PUBLIC_KEY';
 
 /* ── 상태 ──────────────────────────────────────────────── */
-let exchangeRate = 0.0973;  // KRW→JPY fallback
-let productStore = {};       // 구매 버튼용 상품 데이터
+let exchangeRate = 0.0973;
+let productStore = {};
 
 /* ══ 커서 ══════════════════════════════════════════════════ */
-const cr=document.getElementById('cr'),cd=document.getElementById('cd');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px'});
-(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
-function applyCursor(root){
-  (root||document).querySelectorAll('a,button,.tag,.prod-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
-    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+const cr = document.getElementById('cr'), cd = document.getElementById('cd');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cd.style.left = mx + 'px'; cd.style.top = my + 'px';
+});
+(function loop() {
+  rx += (mx - rx) * .11; ry += (my - ry) * .11;
+  cr.style.left = rx + 'px'; cr.style.top = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+function applyCursor(root) {
+  (root || document).querySelectorAll('a,button,.tag,.prod-card').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
   });
 }
 applyCursor();
 
 /* ══ 태그 토글 ══════════════════════════════════════════════ */
-document.querySelectorAll('.tag-group').forEach(group=>{
-  group.querySelectorAll('.tag').forEach(t=>{
-    t.addEventListener('click',()=>{
-      const isBodyGroup = group.id === 'tg-body' || group.id === 'tg-budget';
-      if(isBodyGroup){
-        group.querySelectorAll('.tag').forEach(x=>x.classList.remove('on'));
-        t.classList.add('on');
-      } else {
-        t.classList.toggle('on');
-      }
+document.querySelectorAll('.tag-group').forEach(group => {
+  const single = ['tg-body', 'tg-budget'].includes(group.id);
+  group.querySelectorAll('.tag').forEach(t => {
+    t.addEventListener('click', () => {
+      if (single) { group.querySelectorAll('.tag').forEach(x => x.classList.remove('on')); }
+      t.classList.toggle('on');
     });
   });
 });
 
 /* ══ 페이지 전환 ════════════════════════════════════════════ */
-const trans=document.getElementById('trans');
-function nav(href,label){
-  document.getElementById('trans-lbl').textContent=label||'SEOULFIT';
+const trans = document.getElementById('trans');
+function navTo(href, label) {
+  document.getElementById('trans-lbl').textContent = label || 'SEOULFIT';
   trans.classList.add('go');
-  setTimeout(()=>window.location.href=href,580);
+  setTimeout(() => window.location.href = href, 580);
 }
-document.querySelectorAll('[data-href]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();nav(el.dataset.href,el.dataset.label)}));
+document.querySelectorAll('[data-href]').forEach(el =>
+  el.addEventListener('click', e => { e.preventDefault(); navTo(el.dataset.href, el.dataset.label); })
+);
 
-/* ══ 환율 로드 (Yahoo Finance) ══════════════════════════════ */
-async function fetchExchangeRate(){
-  try{
-    const r=await fetch(`${API_BASE}/api/exchange-rate`);
-    if(!r.ok) throw new Error('exchange rate error');
-    const d=await r.json();
-    exchangeRate=d.krw_to_jpy;
-    document.getElementById('rate-text').textContent=
-      `1 KRW = ¥${exchangeRate.toFixed(4)} · Yahoo Finance 실시간`;
-  }catch{
-    document.getElementById('rate-text').textContent=
-      `1 KRW = ¥${exchangeRate.toFixed(4)} · 기본값 적용됨`;
+/* ══ 환율 (Yahoo Finance) ══════════════════════════════════ */
+async function fetchExchangeRate() {
+  try {
+    const r = await fetch(`${API_BASE}/api/exchange-rate`);
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    exchangeRate = d.krw_to_jpy;
+    document.getElementById('rate-text').textContent =
+      `1 KRW = ¥${exchangeRate.toFixed(4)}  ·  Yahoo Finance 실시간`;
+  } catch {
+    document.getElementById('rate-text').textContent =
+      `1 KRW = ¥${exchangeRate.toFixed(4)}  ·  기본값 적용`;
   }
 }
+const krwToJpy = krw => Math.round(krw * exchangeRate);
+const fmtJpy  = v  => `¥${v.toLocaleString('ja-JP')}`;
 
-function krwToJpy(krw){ return Math.round(krw*exchangeRate); }
-function fmtJpy(v){ return `¥${v.toLocaleString('ja-JP')}`; }
-
-/* ══ 제출 ════════════════════════════════════════════════════ */
-document.getElementById('btn-submit').addEventListener('click', async()=>{
+/* ══ 폼 제출 ════════════════════════════════════════════════ */
+document.getElementById('btn-submit').addEventListener('click', async () => {
   const email  = document.getElementById('input-email').value.trim();
-  const height = parseInt(document.getElementById('input-height').value)||null;
-  const weight = parseInt(document.getElementById('input-weight').value)||null;
+  const height = parseInt(document.getElementById('input-height').value) || null;
+  const weight = parseInt(document.getElementById('input-weight').value) || null;
 
-  if(!email){ alert('이메일 주소를 입력해주세요.'); document.getElementById('input-email').focus(); return; }
+  if (!email) {
+    alert('이메일 주소를 입력해주세요.');
+    document.getElementById('input-email').focus();
+    return;
+  }
 
-  const bodyType = [...document.querySelectorAll('#tg-body .tag.on')].map(t=>t.textContent)[0]||'표준';
-  const styles   = [...document.querySelectorAll('#tg-style .tag.on')].map(t=>t.textContent);
-  const colors   = [...document.querySelectorAll('#tg-color .tag.on')].map(t=>t.textContent);
-  const budget   = [...document.querySelectorAll('#tg-budget .tag.on')].map(t=>t.textContent)[0]||'';
+  const bodyType = [...document.querySelectorAll('#tg-body .tag.on')].map(t => t.textContent)[0] || '표준';
+  const styles   = [...document.querySelectorAll('#tg-style .tag.on')].map(t => t.textContent);
+  const colors   = [...document.querySelectorAll('#tg-color .tag.on')].map(t => t.textContent);
+  const budget   = [...document.querySelectorAll('#tg-budget .tag.on')].map(t => t.textContent)[0] || '';
 
   showLoading();
-  document.getElementById('btn-submit').disabled=true;
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
 
-  try{
-    const r=await fetch(`${API_BASE}/api/recommend`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({height,weight,body_type:bodyType,styles,colors,budget_krw:budget,email})
+  try {
+    const r = await fetch(`${API_BASE}/api/recommend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ height, weight, body_type: bodyType, styles, colors, budget_krw: budget, email }),
     });
-    if(!r.ok){
-      const err=await r.json().catch(()=>({}));
-      throw new Error(err.detail||'서버 오류');
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.detail || '서버 오류');
     }
-    const data=await r.json();
-    renderResults(data,email);
-    loadImages(data);    // 이미지 비동기 로딩
-  }catch(e){
+    const data = await r.json();
+    renderResults(data, email);
+  } catch (e) {
     showError(e.message);
-  }finally{
-    document.getElementById('btn-submit').disabled=false;
+  } finally {
+    btn.disabled = false;
   }
 });
 
-/* ══ 로딩 표시 ══════════════════════════════════════════════ */
-function showLoading(){
-  document.getElementById('result-col').innerHTML=`
-    <div style="padding:40px 0">
-      <div class="skeleton" style="height:80px;margin-bottom:16px"></div>
-      <div class="skeleton" style="height:116px;margin-bottom:10px"></div>
-      <div class="skeleton" style="height:116px;margin-bottom:10px"></div>
-      <div class="skeleton" style="height:116px"></div>
+/* ══ 로딩 스켈레톤 ══════════════════════════════════════════ */
+function showLoading() {
+  const col = document.getElementById('result-col');
+  col.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="skeleton" style="height:80px"></div>
     </div>
-    <div style="font-family:var(--f-mono);font-size:.46rem;letter-spacing:.18em;color:rgba(10,10,10,.3);text-align:center;margin-top:16px">
-      K-POP 아이돌 스타일 분석 중...
+    ${[1,2,3].map(() => `
+      <div class="prod-card" style="pointer-events:none">
+        <div class="prod-inner">
+          <div class="skeleton" style="width:96px;min-height:120px;flex-shrink:0"></div>
+          <div style="flex:1;padding:14px;display:flex;flex-direction:column;gap:8px">
+            <div class="skeleton" style="height:20px;width:60%"></div>
+            <div class="skeleton" style="height:14px;width:80%"></div>
+            <div class="skeleton" style="height:14px;width:90%"></div>
+          </div>
+        </div>
+      </div>`).join('')}
+    <div style="font-family:var(--f-mono);font-size:.44rem;letter-spacing:.18em;color:rgba(10,10,10,.28);text-align:center;margin-top:16px;animation:blink 1.5s infinite">
+      무신사 상품 데이터 로딩 중 ...
     </div>`;
 }
 
 /* ══ 결과 렌더 ══════════════════════════════════════════════ */
-function renderResults(data,email){
-  const totalCount=(data.korean_brands?.length||0)+(data.other_brands?.length||0);
-  productStore={};
+function renderResults(data, email) {
+  productStore = {};
+  const krCnt  = data.korean_brands?.length  || 0;
+  const otCnt  = data.other_brands?.length   || 0;
+  const total  = krCnt + otCnt;
+  const src    = data.source_korean === 'musinsa' ? 'musinsa' : 'ai';
 
-  let html=`
-    <!-- 아이돌 스타일 레퍼런스 -->
+  let html = `
     <div class="idol-banner">
-      <div class="idol-banner-header">
+      <div class="idol-banner-kw">
         <span>★</span>
-        <span>${esc(data.idol_name||'K-POP')} 스타일 레퍼런스</span>
+        <span>${esc(data.idol_name || 'K-POP')} 스타일 레퍼런스</span>
+        <span class="source-chip ${src}">${src === 'musinsa' ? '무신사 실제 상품' : 'AI 추천'}</span>
       </div>
-      <div class="idol-banner-text">${esc(data.idol_style_ref||'')}</div>
+      <div class="idol-banner-text">${esc(data.idol_style_ref || '')}</div>
     </div>
 
-    <!-- 요약 헤더 -->
     <div class="r-header">
       <div class="r-title">추천 아이템</div>
-      <div class="r-count">${totalCount} ITEMS · 가격 엔화(¥) 표시</div>
+      <div class="r-count">${total} ITEMS · ¥ JPY</div>
     </div>`;
 
-  /* 한국 브랜드 */
-  if(data.korean_brands?.length){
-    html+=`<div class="section-label kr">▲ Korean Brands — Priority</div>`;
-    data.korean_brands.forEach((p,i)=>{
-      html+=buildCard(p,true,`k${i}`,email);
-    });
+  /* 한국 브랜드 (무신사) */
+  if (krCnt) {
+    html += `<div class="sec-label kr">▲ Korean Brands — 무신사 ${src === 'musinsa' ? '실제 상품' : 'AI Fallback'}</div>`;
+    data.korean_brands.forEach((p, i) => { html += buildCard(p, true, `k${i}`, email); });
   }
 
-  /* 기타 브랜드 */
-  if(data.other_brands?.length){
-    html+=`<div class="section-label other" style="margin-top:28px">○ Other Brands</div>`;
-    data.other_brands.forEach((p,i)=>{
-      html+=buildCard(p,false,`o${i}`,email);
-    });
+  /* 해외 브랜드 */
+  if (otCnt) {
+    html += `<div class="sec-label other" style="margin-top:24px">○ Other Brands — AI 추천</div>`;
+    data.other_brands.forEach((p, i) => { html += buildCard(p, false, `o${i}`, email); });
   }
 
-  document.getElementById('result-col').innerHTML=html;
+  document.getElementById('result-col').innerHTML = html;
   applyCursor(document.getElementById('result-col'));
 }
 
-function buildCard(p,isKorean,uid,email){
-  const priceJpy=krwToJpy(p.price_krw||0);
-  const key=`prod_${uid}`;
-  productStore[key]={
-    brand:p.brand,name:p.product_name,
-    priceJpy,imageUrl:'',email
+/* ── 카드 빌더 ─────────────────────────────────────────────── */
+function buildCard(p, isKorean, uid, email) {
+  const priceJpy = krwToJpy(p.price_krw || 0);
+  const key = `prod_${uid}`;
+  productStore[key] = {
+    brand: p.brand, name: p.product_name,
+    priceJpy, imageUrl: p.image_url || '',
+    productUrl: p.product_url || '', email,
   };
 
-  const tagsHtml=(p.style_tags||[]).map(t=>`<span class="prod-tag">${esc(t)}</span>`).join('');
-  const krBadge=isKorean?'<div class="kr-badge">KR</div>':'';
+  const tagsHtml = (p.style_tags || []).map(t => `<span class="prod-tag">${esc(t)}</span>`).join('');
+
+  /* 이미지 영역 */
+  let imgAreaHtml = '';
+  if (isKorean && p.image_url) {
+    /* 무신사 실제 이미지 */
+    imgAreaHtml = `
+      <div class="prod-img">
+        <div class="kr-badge">KR</div>
+        <div class="musinsa-badge">MUSINSA</div>
+        <img src="${esc(p.image_url)}"
+             alt="${esc(p.product_name)}"
+             loading="lazy"
+             onerror="this.parentElement.innerHTML='<div class=\\'prod-img-ph\\'>이미지<br/>없음</div>'"/>
+      </div>`;
+  } else if (isKorean) {
+    /* 한국 브랜드지만 이미지 없음 */
+    imgAreaHtml = `
+      <div class="prod-img">
+        <div class="kr-badge">KR</div>
+        <div class="prod-img-ph">무신사<br/>이미지<br/>없음</div>
+      </div>`;
+  } else {
+    /* 해외 브랜드 — 브랜드 이니셜 플레이스홀더 */
+    const initials = (p.brand || 'BR').split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    imgAreaHtml = `
+      <div class="brand-initial">
+        ${esc(initials)}
+        <small>global</small>
+      </div>`;
+  }
+
+  /* 무신사 링크 버튼 (한국 브랜드만) */
+  const viewBtn = (isKorean && p.product_url)
+    ? `<a class="prod-view" href="${esc(p.product_url)}" target="_blank" rel="noopener" title="무신사에서 보기">무신사<br/>↗</a>`
+    : '';
 
   return `
     <div class="prod-card">
       <div class="prod-inner">
-        <div class="prod-img" id="img_${uid}">
-          ${krBadge}
-          <div class="prod-img-loader">이미지<br/>로딩 중</div>
-        </div>
+        ${imgAreaHtml}
         <div class="prod-body">
           <div>
             <div class="prod-brand">${esc(p.brand)}</div>
             <div class="prod-name">${esc(p.product_name)}</div>
-            <div class="prod-desc">${esc(p.product_description)}</div>
+            <div class="prod-desc">${esc(p.product_description || '')}</div>
             <div class="prod-tags">${tagsHtml}</div>
           </div>
         </div>
         <div class="prod-price-col">
           <div>
             <div class="prod-price-jpy">${fmtJpy(priceJpy)}</div>
-            <div class="prod-price-krw">≈ ${(p.price_krw||0).toLocaleString()}원</div>
+            <div class="prod-price-krw">≈ ${(p.price_krw || 0).toLocaleString()}원</div>
           </div>
         </div>
       </div>
@@ -472,164 +519,123 @@ function buildCard(p,isKorean,uid,email){
           구매하기
           <span>Stripe · カード / コンビニ →</span>
         </button>
+        ${viewBtn}
       </div>
     </div>`;
 }
 
-/* ══ 이미지 비동기 로딩 ════════════════════════════════════ */
-async function loadImages(data){
-  const all=[
-    ...(data.korean_brands||[]).map((p,i)=>({...p,uid:`k${i}`})),
-    ...(data.other_brands||[]).map((p,i)=>({...p,uid:`o${i}`})),
-  ];
-  for(const p of all){
-    try{
-      const r=await fetch(`${API_BASE}/api/generate-image`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt:p.image_prompt||p.product_type||'clothing item'})
-      });
-      if(!r.ok) continue;
-      const d=await r.json();
-      const container=document.getElementById(`img_${p.uid}`);
-      if(container&&d.image_url){
-        const img=document.createElement('img');
-        img.src=d.image_url;
-        img.alt=p.product_name;
-        container.innerHTML='';
-        if(p.is_korean!==false){
-          const badge=document.createElement('div');
-          badge.className='kr-badge';badge.textContent='KR';
-          container.appendChild(badge);
-        }
-        container.appendChild(img);
-        // 이미지 URL을 productStore에 저장
-        const key=`prod_${p.uid}`;
-        if(productStore[key]) productStore[key].imageUrl=d.image_url;
-      }
-    }catch(e){
-      console.warn('Image generation skipped:',e.message);
-    }
-    await new Promise(res=>setTimeout(res,400)); // DALL-E rate limit 방지
-  }
-}
-
 /* ══ 구매 (Stripe Checkout) ════════════════════════════════ */
-async function purchaseProduct(key){
-  const p=productStore[key];
-  if(!p){return;}
-  if(!p.email){alert('이메일 주소를 입력해주세요.');return;}
+async function purchaseProduct(key) {
+  const p = productStore[key];
+  if (!p) return;
+  if (!p.email) { alert('이메일 주소를 입력해주세요.'); return; }
 
-  const btn=event.target.closest('.prod-buy');
-  const origText=btn?btn.innerHTML:'';
-  if(btn){btn.textContent='결제 페이지 이동 중...';btn.disabled=true;}
+  const btn = event?.target?.closest('.prod-buy');
+  const origHtml = btn?.innerHTML || '';
+  if (btn) { btn.textContent = '결제 페이지 이동 중...'; btn.disabled = true; }
 
-  try{
-    const r=await fetch(`${API_BASE}/api/checkout`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        product_name:p.name,
-        brand:p.brand,
-        price_jpy:p.priceJpy,
-        image_url:p.imageUrl||undefined,
-        email:p.email,
-      })
+  try {
+    const r = await fetch(`${API_BASE}/api/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product_name: p.name,
+        brand: p.brand,
+        price_jpy: p.priceJpy,
+        image_url: p.imageUrl || undefined,
+        product_url: p.productUrl || undefined,
+        email: p.email,
+      }),
     });
-    if(!r.ok){
-      const err=await r.json().catch(()=>({}));
-      throw new Error(err.detail||'결제 서버 오류');
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.detail || '결제 서버 오류');
     }
-    const d=await r.json();
-    if(d.checkout_url){
-      window.location.href=d.checkout_url;
-    }
-  }catch(e){
-    alert(`결제 오류: ${e.message}\n\n백엔드가 실행 중인지 확인해주세요.`);
-    if(btn){btn.innerHTML=origText;btn.disabled=false;}
+    const d = await r.json();
+    if (d.checkout_url) window.location.href = d.checkout_url;
+  } catch (e) {
+    alert(`결제 오류: ${e.message}\n\n백엔드 서버가 실행 중인지 확인해주세요.`);
+    if (btn) { btn.innerHTML = origHtml; btn.disabled = false; }
   }
 }
 
 /* ══ 결제 완료 처리 ══════════════════════════════════════════ */
-function checkPaymentSuccess(){
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('payment')!=='success') return;
+function checkPaymentSuccess() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') !== 'success') return;
 
-  const email   =decodeURIComponent(params.get('email')||'');
-  const product =decodeURIComponent(params.get('product')||'');
-  const brand   =decodeURIComponent(params.get('brand')||'');
-  const price   =parseInt(params.get('price')||'0');
+  const email   = decodeURIComponent(params.get('email')   || '');
+  const product = decodeURIComponent(params.get('product') || '');
+  const brand   = decodeURIComponent(params.get('brand')   || '');
+  const price   = parseInt(params.get('price') || '0');
 
-  showSuccessModal(email,product,brand,price);
-  sendConfirmationEmail(email,product,brand,price);
-  window.history.replaceState({},'',window.location.pathname);
+  showSuccessModal(email, product, brand, price);
+  sendConfirmationEmail(email, product, brand, price);
+  window.history.replaceState({}, '', window.location.pathname);
 }
 
-function showSuccessModal(email,product,brand,price){
-  const backdrop=document.createElement('div');
-  backdrop.className='modal-backdrop';
-  backdrop.innerHTML=`
+function showSuccessModal(email, product, brand, price) {
+  const bd = document.createElement('div');
+  bd.className = 'modal-backdrop';
+  bd.innerHTML = `
     <div class="modal-box">
       <div class="modal-check">✓ Payment Complete · お支払い完了</div>
       <div class="modal-title">결제 완료</div>
       <div class="modal-body">
         <strong>${esc(brand)}</strong><br/>
         ${esc(product)}<br/>
-        <span style="font-family:var(--f-disp);font-size:1.5rem;color:var(--blue)">${fmtJpy(price)}</span><br/><br/>
-        <span style="font-size:.72rem">${esc(email)} 로<br/>결제 확인 이메일을 발송했습니다</span>
+        <span style="font-family:var(--f-disp);font-size:1.6rem;color:var(--blue)">${fmtJpy(price)}</span><br/><br/>
+        <span style="font-size:.72rem">${esc(email)}<br/>으로 확인 이메일을 발송했습니다</span>
       </div>
       <button class="modal-close" onclick="this.closest('.modal-backdrop').remove()">닫기</button>
     </div>`;
-  document.body.appendChild(backdrop);
-  applyCursor(backdrop);
+  document.body.appendChild(bd);
+  applyCursor(bd);
 }
 
-async function sendConfirmationEmail(email,product,brand,price){
-  if(typeof emailjs==='undefined'||EMAILJS_KEY==='YOUR_PUBLIC_KEY'){
-    console.warn('[EmailJS] 설정이 필요합니다. EMAILJS_SVC / EMAILJS_TPL / EMAILJS_KEY를 설정하세요.');
+async function sendConfirmationEmail(email, product, brand, price) {
+  if (typeof emailjs === 'undefined' || EMAILJS_KEY === 'YOUR_PUBLIC_KEY') {
+    console.warn('[EmailJS] CONFIG에서 SERVICE_ID / TEMPLATE_ID / PUBLIC_KEY를 설정해주세요.');
     return;
   }
-  try{
+  try {
     emailjs.init(EMAILJS_KEY);
-    await emailjs.send(EMAILJS_SVC,EMAILJS_TPL,{
-      to_email   : email,
-      brand_name : brand,
-      product_name:product,
-      price_jpy  : fmtJpy(price),
-      order_date : new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}),
+    await emailjs.send(EMAILJS_SVC, EMAILJS_TPL, {
+      to_email:     email,
+      brand_name:   brand,
+      product_name: product,
+      price_jpy:    fmtJpy(price),
+      order_date:   new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }),
     });
     console.log('[EmailJS] 확인 이메일 발송 완료');
-  }catch(e){
-    console.error('[EmailJS] 이메일 발송 실패:',e);
+  } catch (e) {
+    console.error('[EmailJS] 발송 실패:', e);
   }
 }
 
-/* ══ 오류 표시 ══════════════════════════════════════════════ */
-function showError(msg){
-  document.getElementById('result-col').innerHTML=`
+/* ── 오류 표시 ─────────────────────────────────────────────── */
+function showError(msg) {
+  document.getElementById('result-col').innerHTML = `
     <div class="info-box err">
-      <div class="info-box-title">⚠ 오류 발생</div>
+      <div class="info-box-title">⚠ 오류</div>
       <div class="info-box-body">
-        ${esc(msg||'알 수 없는 오류')}<br/><br/>
-        백엔드 서버가 실행 중인지 확인해주세요:<br/>
+        ${esc(msg || '알 수 없는 오류')}<br/><br/>
+        백엔드 서버가 실행 중인지 확인:<br/>
         <code>cd backend && uvicorn main:app --reload</code>
       </div>
     </div>`;
 }
 
-/* ── HTML 이스케이프 helper ───────────────────────────────── */
-function esc(s){
-  if(!s) return '';
+/* ── HTML 이스케이프 ────────────────────────────────────────── */
+function esc(s) {
+  if (!s) return '';
   return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 /* ══ 초기화 ════════════════════════════════════════════════ */
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded', () => {
   fetchExchangeRate();
   checkPaymentSuccess();
 });

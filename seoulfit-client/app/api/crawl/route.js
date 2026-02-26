@@ -4,12 +4,12 @@ import { writeFile, readFile, mkdir } from 'fs/promises';
 import path from 'path';
 
 const CACHE_PATH = path.join(process.cwd(), 'data', 'musinsa-cache.json');
-const DELAY_MS = 3000;
+const DELAY_MS = 3500;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function crawlBrand(brandData) {
-  const products = [];
   let browser;
+  const products = [];
 
   try {
     browser = await puppeteer.launch({
@@ -32,7 +32,7 @@ async function crawlBrand(brandData) {
     const items = await page.evaluate((brandName) => {
       const results = [];
 
-      // 상품 링크 + 상품명이 있는 a 태그 목록
+      // 상품명 a 태그 (텍스트 있는 것만)
       const nameLinks = Array.from(document.querySelectorAll('a'))
         .filter(a => /\/products\/\d+/.test(a.href) && a.innerText?.trim().length > 2);
 
@@ -42,38 +42,47 @@ async function crawlBrand(brandData) {
 
         const goodsNo = link.href.match(/\/products\/(\d+)/)?.[1];
 
-        // 이 링크의 부모 컨테이너 안에서 이미지, 가격 찾기
-        // 부모를 3~5단계 올라가며 카드 컨테이너 탐색
+        // 카드 컨테이너 탐색 (최대 8단계 위로)
         let card = link.parentElement;
-        for (let i = 0; i < 6; i++) {
+        let img = null;
+        let price = 0;
+
+        for (let i = 0; i < 8; i++) {
           if (!card) break;
-          const img = card.querySelector('img[src*="msscdn.net"][src*="goods_img"]');
-          const priceEl = card.querySelector('span.text-body_13px_semi, [class*="dMbRNh"]');
-          if (img || priceEl) {
-            const price = parseInt((priceEl?.textContent ?? '').replace(/[^0-9]/g, ''), 10) || 0;
-            results.push({
-              id: `musinsa_${goodsNo ?? Date.now()}`,
-              name,
-              brand: brandName,
-              price_krw: price,
-              image_url: img?.src ?? null,
-              product_url: link.href,
-              goods_no: goodsNo,
-            });
-            return;
+
+          // 이미지: msscdn.net + goods_img 포함
+          if (!img) {
+            const imgEl = card.querySelector('img[src*="msscdn.net"]');
+            if (imgEl?.src?.includes('goods_img')) img = imgEl.src;
           }
+
+          // 가격: 4자리 이상 숫자 (최소 1,000원)
+          if (!price) {
+            const priceEl = card.querySelector('span.text-body_13px_semi, [class*="dMbRNh"]');
+            if (priceEl) {
+              const raw = priceEl.textContent.replace(/[^0-9]/g, '');
+              if (raw.length >= 4) price = parseInt(raw, 10);
+            }
+          }
+
+          if (img && price) break;
           card = card.parentElement;
         }
 
-        // 카드 못 찾으면 이미지 없이라도 저장
+        // 이미지 없으면 상품번호로 CDN URL 직접 구성 (debug-crawl 방식)
+        if (!img && goodsNo) {
+          const prefix = goodsNo.slice(0, 4);
+          img = `https://image.msscdn.net/images/goods_img/${prefix}/${goodsNo}/${goodsNo}_1_500.jpg`;
+        }
+
         results.push({
           id: `musinsa_${goodsNo ?? Date.now()}`,
           name,
           brand: brandName,
-          price_krw: 0,
-          image_url: null,
+          price_krw: price,
+          image_url: img ?? null,
           product_url: link.href,
-          goods_no: goodsNo,
+          goods_no: goodsNo ?? null,
         });
       });
 
@@ -81,7 +90,7 @@ async function crawlBrand(brandData) {
     }, brandData.name_ko);
 
     products.push(...items);
-    console.log(`[puppeteer] ${brandData.name_ko}: ${products.length}개 수집`);
+    console.log(`[puppeteer] ${brandData.name_ko}: ${products.length}개 수집, 이미지: ${items.filter(i => i.image_url).length}개`);
 
   } catch (err) {
     console.error(`[puppeteer] 실패 (${brandData.name_ko}):`, err.message);
@@ -108,6 +117,7 @@ export async function POST(request) {
         ? { id: brandItem, name_ko: brandItem, musinsa_keyword: brandItem, musinsa_url: null }
         : brandItem;
 
+      // brand.id로 캐시 키 통일 (recommend/route.js와 동일)
       const cacheKey = brandData.id ?? brandData.musinsa_keyword;
       const cached = cache[cacheKey];
       if (cached?.crawled_at && Date.now() - new Date(cached.crawled_at).getTime() < SIX_HOURS) {
@@ -118,7 +128,11 @@ export async function POST(request) {
 
       const products = await crawlBrand(brandData);
       results[cacheKey] = products;
-      cache[cacheKey] = { products, crawled_at: new Date().toISOString(), brand_name: brandData.name_ko };
+      cache[cacheKey] = {
+        products,
+        crawled_at: new Date().toISOString(),
+        brand_name: brandData.name_ko,
+      };
       await sleep(DELAY_MS);
     }
 

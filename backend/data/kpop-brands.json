@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "description": "무신사 실제 입점 K-POP 연관 여성/젠더리스 브랜드",
+    "last_updated": "2026-02-26",
+    "note": "무신사 공식 입점 확인된 브랜드만 포함"
+  },
+  "brands": [
+    {
+      "id": "matin_kim",
+      "name_ko": "마뗑킴",
+      "name_en": "MATIN KIM",
+      "name_ja": "マタンキム",
+      "musinsa_keyword": "마뗑킴",
+      "musinsa_url": "https://www.musinsa.com/brand/matinkim/products",
+      "categories": ["outer", "top", "dress"],
+      "style_tags": ["페미닌", "트렌디", "오피스룩", "클래식", "캐주얼"],
+      "price_range_krw": { "min": 40000, "max": 300000 },
+      "idol_references": [
+        {
+          "idol": "카리나 (에스파)",
+          "item": "LOGO COATING JUMPER",
+          "occasion": "공항 패션",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "sculptor",
+      "name_ko": "스컬프터",
+      "name_en": "SCULPTOR",
+      "name_ja": "スカルプター",
+      "musinsa_keyword": "스컬프터",
+      "musinsa_url": "https://www.musinsa.com/brand/sculptor/products",
+      "categories": ["top", "bottom", "outer"],
+      "style_tags": ["미니멀", "베이직", "젠더리스", "모던", "데일리"],
+      "price_range_krw": { "min": 50000, "max": 250000 },
+      "idol_references": [
+        {
+          "idol": "지효 (트와이스)",
+          "item": "SCULPTOR 니트",
+          "occasion": "인스타그램 일상",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "ader_error",
+      "name_ko": "아더에러",
+      "name_en": "ADER ERROR",
+      "name_ja": "アダーエラー",
+      "musinsa_keyword": "아더에러",
+      "musinsa_url": "https://www.musinsa.com/brand/adererror/products",
+      "categories": ["outer", "top", "bottom"],
+      "style_tags": ["아방가르드", "젠더리스", "스트릿", "아티스틱", "오버핏"],
+      "price_range_krw": { "min": 80000, "max": 500000 },
+      "idol_references": [
+        {
+          "idol": "BTS",
+          "item": "ADER ERROR 콜라보 컬렉션",
+          "occasion": "공식 화보",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "studio_tomboy",
+      "name_ko": "스튜디오톰보이",
+      "name_en": "STUDIO TOMBOY",
+      "name_ja": "スタジオトムボーイ",
+      "musinsa_keyword": "스튜디오톰보이",
+      "musinsa_url": "https://www.musinsa.com/brand/studiotomboy/products",
+      "categories": ["outer", "top", "bottom", "dress"],
+      "style_tags": ["클래식", "페미닌", "테일러드", "오피스룩", "럭셔리"],
+      "price_range_krw": { "min": 80000, "max": 600000 },
+      "idol_references": [
+        {
+          "idol": "아이브 멤버들",
+          "item": "블레이저 / 트위드 재킷",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "ordinary_people",
+      "name_ko": "오디너리피플",
+      "name_en": "ORDINARY PEOPLE",
+      "name_ja": "オーディナリーピープル",
+      "musinsa_keyword": "오디너리피플",
+      "musinsa_url": "https://www.musinsa.com/brand/ordinarypeople/products",
+      "categories": ["top", "bottom", "outer"],
+      "style_tags": ["스트릿", "캐주얼", "그래픽", "오버핏", "Y2K"],
+      "price_range_krw": { "min": 40000, "max": 200000 },
+      "idol_references": [
+        {
+          "idol": "뉴진스",
+          "item": "그래픽 티셔츠",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "charm_s",
+      "name_ko": "참스",
+      "name_en": "CHARM'S",
+      "name_ja": "チャームズ",
+      "musinsa_keyword": "참스",
+      "musinsa_url": "https://www.musinsa.com/brand/charms/products",
+      "categories": ["top", "bottom", "outer"],
+      "style_tags": ["Y2K", "스트릿", "캐주얼", "컬러풀", "레이어드"],
+      "price_range_krw": { "min": 30000, "max": 180000 },
+      "idol_references": [
+        {
+          "idol": "에스파 멤버들",
+          "item": "참스 후드 / 맨투맨",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "noynim",
+      "name_ko": "노이님",
+      "name_en": "NOYNIM",
+      "name_ja": "ノイニム",
+      "musinsa_keyword": "노이님",
+      "musinsa_url": "https://www.musinsa.com/brand/noynim/products",
+      "categories": ["top", "bottom", "dress"],
+      "style_tags": ["미니멀", "모던", "젠더리스", "베이직", "크린핏"],
+      "price_range_krw": { "min": 50000, "max": 250000 },
+      "idol_references": [
+        {
+          "idol": "르세라핌 멤버들",
+          "item": "노이님 니트 / 슬랙스",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "d_antidote",
+      "name_ko": "디앤티도트",
+      "name_en": "D.ANTIDOTE",
+      "name_ja": "ディーアンティドート",
+      "musinsa_keyword": "디앤티도트",
+      "musinsa_url": "https://www.musinsa.com/brand/dantidote/products",
+      "categories": ["outer", "top", "bottom"],
+      "style_tags": ["하이엔드", "아방가르드", "럭셔리", "아티스틱", "젠더리스"],
+      "price_range_krw": { "min": 150000, "max": 800000 },
+      "idol_references": [
+        {
+          "idol": "블랙핑크 멤버들",
+          "item": "디앤티도트 아우터",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "satur",
+      "name_ko": "사투르",
+      "name_en": "SATUR",
+      "name_ja": "サトゥール",
+      "musinsa_keyword": "사투르",
+      "musinsa_url": "https://www.musinsa.com/brand/satur/products",
+      "categories": ["top", "bottom", "set"],
+      "style_tags": ["스포티", "캐주얼", "미니멀", "데일리", "기능성"],
+      "price_range_krw": { "min": 30000, "max": 150000 },
+      "idol_references": [
+        {
+          "idol": "트와이스 멤버들",
+          "item": "사투르 트레이닝 세트",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "musinsa_standard",
+      "name_ko": "무신사 스탠다드",
+      "name_en": "MUSINSA STANDARD",
+      "name_ja": "ムシンサスタンダード",
+      "musinsa_keyword": "무신사스탠다드",
+      "musinsa_url": "https://www.musinsa.com/brand/musinsastandard/products",
+      "categories": ["top", "bottom", "outer", "dress"],
+      "style_tags": ["베이직", "미니멀", "데일리", "캐주얼", "놈코어"],
+      "price_range_krw": { "min": 15000, "max": 120000 },
+      "idol_references": [
+        {
+          "idol": "다양한 아이돌",
+          "item": "베이직 니트 / 슬랙스",
+          "occasion": "데일리 착용",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "marithe",
+      "name_ko": "마리떼",
+      "name_en": "MARITHE",
+      "name_ja": "マリテ",
+      "musinsa_keyword": "마리떼",
+      "musinsa_url": "https://www.musinsa.com/brand/marithe/products",
+      "categories": ["top", "bottom", "outer"],
+      "style_tags": ["빈티지", "프렌치", "캐주얼", "레트로", "아메카지"],
+      "price_range_krw": { "min": 40000, "max": 200000 },
+      "idol_references": [
+        {
+          "idol": "뉴진스",
+          "item": "마리떼 데님 / 로고 티셔츠",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "glonney",
+      "name_ko": "글로니",
+      "name_en": "GLONNEY",
+      "name_ja": "グロニー",
+      "musinsa_keyword": "글로니",
+      "musinsa_url": "https://www.musinsa.com/brand/glonney/products",
+      "categories": ["top", "bottom", "dress", "outer"],
+      "style_tags": ["페미닌", "로맨틱", "플로럴", "하이틴", "캐주얼"],
+      "price_range_krw": { "min": 35000, "max": 180000 },
+      "idol_references": [
+        {
+          "idol": "아이브 멤버들",
+          "item": "글로니 플로럴 드레스",
+          "occasion": "스타일리스트 픽",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "muahmuah",
+      "name_ko": "무아무아",
+      "name_en": "MUAHMUAH",
+      "name_ja": "ムアムア",
+      "musinsa_keyword": "무아무아",
+      "musinsa_url": "https://www.musinsa.com/brand/muahmuah/products",
+      "categories": ["top", "bottom"],
+      "style_tags": ["베이직", "캐주얼", "데일리", "가성비", "미니멀"],
+      "price_range_krw": { "min": 12000, "max": 80000 },
+      "idol_references": [
+        {
+          "idol": "다양한 아이돌",
+          "item": "베이직 티셔츠 / 팬츠",
+          "occasion": "데일리 착용",
+          "confirmed": false
+        }
+      ]
+    }
+  ]
+}
