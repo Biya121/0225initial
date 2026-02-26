@@ -5,16 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>SEOULFIT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f4f0;
+  --bg:#f0eef8;
   --black:#0a0a0a;
-  --blue:#1246e8;
-  --blue-light:rgba(18,70,232,0.09);
-  --border:rgba(10,10,10,0.11);
-  --f-disp:'Bebas Neue',sans-serif;
+  --purple:#5044af;
+  --purple-mid:#807eda;
+  --purple-light:#a1a9f3;
+  --purple-pale:#9ecbf8;
+  --purple-ghost:#efe5fb;
+  --purple-glow:rgba(80,68,175,0.13);
+  --border:rgba(80,68,175,0.18);
+  --f-disp:'Cormorant Garamond',serif;
   --f-body:'Noto Sans KR',sans-serif;
   --f-mono:'DM Mono',monospace;
   --card-w:400px;
@@ -23,15 +27,15 @@
 html,body{width:100%;height:100%;background:var(--bg);color:var(--black);font-family:var(--f-body);overflow:hidden;cursor:none}
 
 /* CURSOR */
-#cur{position:fixed;top:0;left:0;z-index:9999;width:30px;height:30px;border:1.5px solid var(--black);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-radius .22s,border-color .22s,background .22s}
-#cur2{position:fixed;top:0;left:0;z-index:10000;width:6px;height:6px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
-.ch #cur{width:54px;height:54px;border-color:var(--blue);background:var(--blue-light);border-radius:3px}
+#cur{position:fixed;top:0;left:0;z-index:9999;width:30px;height:30px;border:1.5px solid var(--purple);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .22s,height .22s,border-radius .22s,border-color .22s,background .22s}
+#cur2{position:fixed;top:0;left:0;z-index:10000;width:6px;height:6px;background:var(--purple);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
+.ch #cur{width:54px;height:54px;border-color:var(--purple-mid);background:var(--purple-glow);border-radius:3px}
 
 /* PAGE TRANSITION */
-#trans{position:fixed;inset:0;z-index:8000;background:var(--black);transform:scaleY(0);transform-origin:bottom;pointer-events:none}
+#trans{position:fixed;inset:0;z-index:8000;background:var(--purple);transform:scaleY(0);transform-origin:bottom;pointer-events:none}
 #trans.go{animation:tgo .55s cubic-bezier(.76,0,.24,1) forwards}
 @keyframes tgo{to{transform:scaleY(1)}}
-#trans-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--f-disp);font-size:2rem;letter-spacing:.25em;color:#fff;opacity:0;transition:opacity .2s .25s}
+#trans-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--f-disp);font-size:2.6rem;letter-spacing:.25em;color:#fff;font-weight:300;font-style:italic;opacity:0;transition:opacity .2s .25s}
 #trans.go #trans-lbl{opacity:1}
 
 /* INTRO */
@@ -39,62 +43,78 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--black);font-fa
 #intro.out{opacity:0;visibility:hidden;pointer-events:none}
 .i-rings{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:48px}
 .ir{position:absolute;border-radius:50%}
-.ir1{inset:0;border:1px solid rgba(18,70,232,.4);animation:rot 14s linear infinite}
-.ir2{inset:22px;border:1px solid rgba(10,10,10,.1);animation:rot 9s linear infinite reverse}
-.ir3{inset:46px;border:1px solid rgba(18,70,232,.12);animation:rot 6s linear infinite}
-.ir1::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--blue)}
-.ir2::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--black)}
+.ir1{inset:0;border:1px solid rgba(80,68,175,.4);animation:rot 14s linear infinite}
+.ir2{inset:22px;border:1px solid rgba(80,68,175,.15);animation:rot 9s linear infinite reverse}
+.ir3{inset:46px;border:1px solid rgba(128,126,218,.2);animation:rot 6s linear infinite}
+.ir1::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--purple)}
+.ir2::after{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--purple-mid)}
 @keyframes rot{to{transform:rotate(360deg)}}
 .i-logo{text-align:center;position:relative;z-index:1}
-.i-logo-main{font-family:var(--f-disp);font-size:3.2rem;letter-spacing:.22em;color:var(--black)}
-.i-logo-main em{color:var(--blue);font-style:normal}
-.i-logo-sub{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.35em;color:rgba(10,10,10,.3);margin-top:6px;text-transform:uppercase}
-.i-desc{font-size:.9rem;line-height:2.1;color:rgba(10,10,10,.4);text-align:center;max-width:260px;margin-bottom:44px;letter-spacing:.03em}
-.i-btn{font-family:var(--f-disp);font-size:1.1rem;letter-spacing:.3em;color:var(--black);background:transparent;border:1.5px solid var(--border);padding:14px 52px;cursor:none;position:relative;overflow:hidden}
-.i-btn::before{content:'';position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .38s cubic-bezier(.77,0,.18,1);z-index:-1}
-.i-btn:hover{color:#fff;border-color:var(--blue)}
+.i-logo-main{font-family:var(--f-disp);font-size:3.6rem;letter-spacing:.22em;color:var(--black);font-weight:300}
+.i-logo-main em{color:var(--purple);font-style:italic}
+.i-logo-sub{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.35em;color:rgba(80,68,175,.4);margin-top:6px;text-transform:uppercase}
+.i-desc{font-size:1rem;line-height:2.1;color:rgba(10,10,10,.45);text-align:center;max-width:280px;margin-bottom:44px;letter-spacing:.03em}
+.i-btn{font-family:var(--f-disp);font-size:1.3rem;letter-spacing:.3em;font-weight:400;color:var(--black);background:transparent;border:1.5px solid var(--border);padding:14px 52px;cursor:none;position:relative;overflow:hidden}
+.i-btn::before{content:'';position:absolute;inset:0;background:var(--purple);transform:scaleX(0);transform-origin:left;transition:transform .38s cubic-bezier(.77,0,.18,1);z-index:-1}
+.i-btn:hover{color:#fff;border-color:var(--purple)}
 .i-btn:hover::before{transform:scaleX(1)}
 
 /* MAIN SCENE */
 #scene{position:fixed;inset:0;opacity:0;transition:opacity .5s;background:var(--bg)}
 #scene.show{opacity:1}
 
-/* ═══════════════════════════════════════════════
-   BACKGROUND IMAGE LAYER
-   
-   이미지 파일 경로를 아래 JS CONFIG에서 설정하세요.
-   파일을 추가하면 그라디언트 대신 이미지가 표시됩니다.
-═══════════════════════════════════════════════ */
 #bg{
   position:absolute;inset:0;z-index:0;
   background-size:cover;background-position:center;
   transition:background 1s ease;
 }
-/* 배경 이미지가 없을 때 사용하는 카드별 그라디언트 */
-.bg-0{background:linear-gradient(150deg,#eef2fc 0%,#f5f4f0 100%)}
-.bg-1{background:linear-gradient(150deg,#f0eef8 0%,#f5f4f0 100%)}
-.bg-2{background:linear-gradient(150deg,#eef5f0 0%,#f5f4f0 100%)}
+.bg-0{background:linear-gradient(150deg,#e8e6f8 0%,#f0eef8 100%)}
+.bg-1{background:linear-gradient(150deg,#e6e5f5 0%,#ede8f8 100%)}
+.bg-2{background:linear-gradient(150deg,#e8ecf8 0%,#edeaf8 100%)}
 
-/* 배경 이미지 위 반투명 오버레이 — 카드 가독성 확보 */
 #bg-overlay{
   position:absolute;inset:0;z-index:1;
-  background:rgba(245,244,240,0.52);
+  background:rgba(240,238,248,0.52);
   pointer-events:none;
   opacity:0;transition:opacity .8s;
 }
 #bg-overlay.on{opacity:1}
 
 /* HEADER */
-header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid var(--border);background:rgba(245,244,240,.94);backdrop-filter:blur(14px)}
-.hd-logo{font-family:var(--f-disp);font-size:1.6rem;letter-spacing:.22em;color:var(--black);text-decoration:none}
-.hd-logo em{color:var(--blue);font-style:normal}
-.hd-nav{display:flex;gap:36px;list-style:none}
-.hd-nav a{font-family:var(--f-mono);font-size:.65rem;letter-spacing:.2em;color:rgba(10,10,10,.38);text-decoration:none;text-transform:uppercase;transition:color .2s;cursor:none}
-.hd-nav a:hover{color:var(--black)}
-.hd-r{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.12em;color:rgba(10,10,10,.25)}
+header{
+  position:absolute;top:0;left:0;right:0;z-index:200;
+  height:72px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;border-bottom:1px solid var(--border);
+  background:rgba(240,238,248,.94);backdrop-filter:blur(14px)
+}
+.hd-logo{
+  font-family:var(--f-disp);font-size:2rem;letter-spacing:.22em;
+  color:var(--black);text-decoration:none;font-weight:300
+}
+.hd-logo em{color:var(--purple);font-style:italic}
+
+/* NAV — bigger, always visible, with active underline */
+.hd-nav{display:flex;gap:44px;list-style:none}
+.hd-nav a{
+  font-family:var(--f-mono);font-size:.82rem;letter-spacing:.18em;
+  color:rgba(10,10,10,.5);text-decoration:none;text-transform:uppercase;
+  transition:color .2s;cursor:none;
+  position:relative;padding-bottom:4px
+}
+.hd-nav a::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:1.5px;background:var(--purple);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .25s cubic-bezier(.77,0,.18,1)
+}
+.hd-nav a:hover{color:var(--purple)}
+.hd-nav a:hover::after,.hd-nav a.active::after{transform:scaleX(1)}
+.hd-nav a.active{color:var(--purple)}
+
+.hd-r{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;color:rgba(80,68,175,.35)}
 
 /* STAGE */
-#stage{position:absolute;top:64px;bottom:76px;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;perspective:1400px;overflow:hidden}
+#stage{position:absolute;top:72px;bottom:76px;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;perspective:1400px;overflow:hidden}
 
 /* CARDS CONTAINER */
 #cards{position:relative;width:var(--card-w);height:var(--card-h)}
@@ -109,19 +129,12 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
   will-change:transform,opacity,filter;
   transition:transform .7s cubic-bezier(.76,0,.24,1),opacity .7s ease,filter .7s ease,box-shadow .7s ease;
 }
-.card[data-pos="center"]{transform:translateX(0) scale(1) rotateY(0deg);opacity:1;filter:none;z-index:5;box-shadow:0 32px 96px rgba(10,10,10,.13)}
-.card[data-pos="right"]{transform:translateX(calc(var(--card-w) * .92)) scale(.78) rotateY(-14deg);opacity:.65;filter:brightness(.86);z-index:3;box-shadow:0 10px 32px rgba(10,10,10,.07)}
-.card[data-pos="left"]{transform:translateX(calc(var(--card-w) * -.92)) scale(.78) rotateY(14deg);opacity:.65;filter:brightness(.86);z-index:3;box-shadow:0 10px 32px rgba(10,10,10,.07)}
+.card[data-pos="center"]{transform:translateX(0) scale(1) rotateY(0deg);opacity:1;filter:none;z-index:5;box-shadow:0 32px 96px rgba(80,68,175,.18)}
+.card[data-pos="right"]{transform:translateX(calc(var(--card-w) * .92)) scale(.78) rotateY(-14deg);opacity:.65;filter:brightness(.86);z-index:3;box-shadow:0 10px 32px rgba(80,68,175,.08)}
+.card[data-pos="left"]{transform:translateX(calc(var(--card-w) * -.92)) scale(.78) rotateY(14deg);opacity:.65;filter:brightness(.86);z-index:3;box-shadow:0 10px 32px rgba(80,68,175,.08)}
 
-/* ═══════════════════════════════════════════════
-   CARD IMAGE LAYER
-   
-   각 카드의 img 태그에 src를 채우면 그라디언트 위에
-   이미지가 표시됩니다.
-═══════════════════════════════════════════════ */
 .card-img{
   position:absolute;inset:0;z-index:0;
-  /* 이미지 없을 때 fallback 그라디언트 */
   background-size:cover;background-position:center;
 }
 .card-img img{
@@ -130,26 +143,37 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
   object-fit:cover;object-position:center top;
   display:block;
 }
-/* fallback gradients */
-.ci-0{background:linear-gradient(140deg,#d4e0ff 0%,#b8caff 60%,#a0b8ff 100%)}
-.ci-1{background:linear-gradient(140deg,#e8d4ff 0%,#d4b8ff 60%,#c0a0ff 100%)}
-.ci-2{background:linear-gradient(140deg,#d4f0e0 0%,#b8e8c8 60%,#a0d8b0 100%)}
+.ci-0{background:linear-gradient(140deg,#d4d0f0 0%,#b8b4e8 60%,#a0a0e0 100%)}
+.ci-1{background:linear-gradient(140deg,#c8c4f0 0%,#b0b0e8 60%,#9ecbf8 100%)}
+.ci-2{background:linear-gradient(140deg,#d0d4f8 0%,#b8c0f0 60%,#a0aee8 100%)}
 
 .card-deco{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-.card-deco svg{position:absolute;bottom:-40px;right:-40px;opacity:.18}
+.card-deco svg{position:absolute;bottom:-40px;right:-40px;opacity:.15}
 
-/* card bottom fade for text */
 .card-fade{position:absolute;bottom:0;left:0;right:0;height:65%;z-index:2;background:linear-gradient(to top,rgba(255,255,255,1) 0%,rgba(255,255,255,.7) 45%,transparent 100%)}
 
 .card-body{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:32px 30px}
-.card-tag{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.28em;color:var(--blue);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.card-tag::before{content:'';display:block;width:16px;height:2px;background:var(--blue)}
-.card-title{font-family:var(--f-disp);font-size:3.2rem;letter-spacing:.03em;color:var(--black);line-height:.92;margin-bottom:12px}
-.card-title em{color:var(--blue);font-style:normal}
-.card-desc{font-size:.85rem;line-height:1.9;color:rgba(10,10,10,.5);letter-spacing:.02em;margin-bottom:22px}
-.card-cta{font-family:var(--f-disp);font-size:1rem;letter-spacing:.22em;color:var(--black);background:transparent;border:1.5px solid rgba(10,10,10,.18);padding:11px 28px;cursor:none;position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px;transition:color .3s,border-color .3s}
-.card-cta::before{content:'';position:absolute;inset:0;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.77,0,.18,1);z-index:-1}
-.card-cta:hover{color:#fff;border-color:var(--blue)}
+.card-tag{
+  font-family:var(--f-mono);font-size:.68rem;letter-spacing:.28em;
+  color:var(--purple);text-transform:uppercase;
+  margin-bottom:12px;display:flex;align-items:center;gap:10px
+}
+.card-tag::before{content:'';display:block;width:16px;height:1.5px;background:var(--purple)}
+.card-title{
+  font-family:var(--f-disp);font-size:3.8rem;letter-spacing:.02em;
+  color:var(--black);line-height:.9;margin-bottom:14px;
+  font-weight:300
+}
+.card-title em{color:var(--purple);font-style:italic}
+.card-desc{font-size:.88rem;line-height:1.9;color:rgba(10,10,10,.5);letter-spacing:.02em;margin-bottom:22px}
+.card-cta{
+  font-family:var(--f-disp);font-size:1.15rem;letter-spacing:.22em;font-weight:400;
+  color:var(--black);background:transparent;border:1.5px solid rgba(80,68,175,.25);
+  padding:11px 28px;cursor:none;position:relative;overflow:hidden;
+  display:inline-flex;align-items:center;gap:12px;transition:color .3s,border-color .3s
+}
+.card-cta::before{content:'';position:absolute;inset:0;background:var(--purple);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.77,0,.18,1);z-index:-1}
+.card-cta:hover{color:#fff;border-color:var(--purple)}
 .card-cta:hover::before{transform:scaleX(1)}
 .cta-arr{transition:transform .3s;display:inline-block}
 .card-cta:hover .cta-arr{transform:translateX(6px)}
@@ -157,22 +181,37 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
 .card:not([data-pos="center"]) .card-desc{display:none}
 
 /* ARROWS */
-.arr{position:absolute;top:50%;z-index:50;width:52px;height:52px;border-radius:50%;border:1.5px solid var(--border);background:rgba(245,244,240,.92);backdrop-filter:blur(10px);color:var(--black);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:none;transform:translateY(-50%);transition:background .2s,border-color .2s,color .2s}
-.arr:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.arr{
+  position:absolute;top:50%;z-index:50;
+  width:52px;height:52px;border-radius:50%;
+  border:1.5px solid var(--border);
+  background:rgba(240,238,248,.92);backdrop-filter:blur(10px);
+  color:var(--purple);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;transform:translateY(-50%);
+  transition:background .2s,border-color .2s,color .2s
+}
+.arr:hover{background:var(--purple);border-color:var(--purple);color:#fff}
 #arr-l{left:44px}
 #arr-r{right:44px}
 
 /* BOTTOM BAR */
-#bottom{position:absolute;bottom:0;left:0;right:0;z-index:200;height:76px;border-top:1px solid var(--border);background:rgba(245,244,240,.94);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:0 56px}
+#bottom{
+  position:absolute;bottom:0;left:0;right:0;z-index:200;
+  height:76px;border-top:1px solid var(--border);
+  background:rgba(240,238,248,.94);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px
+}
 #dots{display:flex;gap:10px;align-items:center}
-.dot{width:6px;height:6px;border-radius:50%;background:rgba(10,10,10,.18);cursor:none;transition:all .3s}
-.dot.on{background:var(--black);width:26px;border-radius:3px}
-#ctr{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.15em;color:rgba(10,10,10,.28);display:flex;align-items:baseline;gap:4px}
-#ctr-n{font-family:var(--f-disp);font-size:1.6rem;color:var(--black);line-height:1;letter-spacing:.04em}
-#bottom-label{font-family:var(--f-mono);font-size:.55rem;letter-spacing:.2em;color:rgba(10,10,10,.28);text-transform:uppercase}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(80,68,175,.22);cursor:none;transition:all .3s}
+.dot.on{background:var(--purple);width:26px;border-radius:3px}
+#ctr{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.15em;color:rgba(80,68,175,.4);display:flex;align-items:baseline;gap:4px}
+#ctr-n{font-family:var(--f-disp);font-size:1.8rem;color:var(--purple);line-height:1;letter-spacing:.04em;font-weight:300}
+#bottom-label{font-family:var(--f-mono);font-size:.58rem;letter-spacing:.2em;color:rgba(80,68,175,.38);text-transform:uppercase}
 
 /* noise */
-.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.02;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
 </style>
 </head>
 <body>
@@ -202,7 +241,7 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
   <header>
     <a class="hd-logo" href="#">SEOUL<em>FIT</em></a>
     <ul class="hd-nav">
-      <li><a href="#" data-goto="0">패션추천</a></li>
+      <li><a href="#" data-goto="0" class="active">패션추천</a></li>
       <li><a href="#" data-goto="1">AI 포토부스</a></li>
       <li><a href="#" data-goto="2">픽셀 서울</a></li>
     </ul>
@@ -213,53 +252,41 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
     <button class="arr" id="arr-l">←</button>
     <div id="cards">
 
-      <!-- ─────────────────────────────────────
-           CARD 0 : AI 패션 추천
-           카드 이미지: assets/cards/card-fashion.jpg
-      ───────────────────────────────────────── -->
+      <!-- CARD 0 : AI 패션 추천 -->
       <div class="card" data-i="0">
         <div class="card-img ci-0">
-        
-            <img src="assets/cards/card-fashion.png" alt="AI 패션 추천"/>
-        
+          <img src="assets/cards/card-fashion.png" alt="AI 패션 추천"/>
         </div>
         <div class="card-deco">
           <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
-            <rect x="50" y="50" width="220" height="220" stroke="#1246e8" stroke-width="1.2" transform="rotate(10 160 160)"/>
-            <rect x="80" y="80" width="160" height="160" stroke="#1246e8" stroke-width="1.2" transform="rotate(22 160 160)"/>
-            <rect x="110" y="110" width="100" height="100" stroke="#1246e8" stroke-width="1.2" transform="rotate(34 160 160)"/>
+            <rect x="50" y="50" width="220" height="220" stroke="#5044af" stroke-width="1.2" transform="rotate(10 160 160)"/>
+            <rect x="80" y="80" width="160" height="160" stroke="#5044af" stroke-width="1.2" transform="rotate(22 160 160)"/>
+            <rect x="110" y="110" width="100" height="100" stroke="#5044af" stroke-width="1.2" transform="rotate(34 160 160)"/>
           </svg>
         </div>
         <div class="card-fade"></div>
         <div class="card-body">
           <div class="card-tag">Card 01 — AI 패션 추천</div>
           <div class="card-title">AI<br/>큐레<em>이터</em></div>
-          <div class="card-desc">키, 체형, 스타일 입력 →<br/>한국 브랜드 AI 추천 + Toss 결제</div>
+          <div class="card-desc">키, 체형, 스타일 입력 →<br/>한국 브랜드 AI 추천 + Stripe 결제</div>
           <button class="card-cta" data-href="fashion.html" data-label="AI 패션 추천">
             추천 받기 <span class="cta-arr">→</span>
           </button>
         </div>
       </div>
 
-      <!-- ─────────────────────────────────────
-           CARD 1 : AI 포토부스
-           카드 이미지: assets/cards/card-photo.jpg
-      ───────────────────────────────────────── -->
+      <!-- CARD 1 : AI 포토부스 -->
       <div class="card" data-i="1">
         <div class="card-img ci-1">
-          
-        
-            <img src="assets/cards/card-photo.png" alt="AI 포토부스"/>
-        
-          
+          <img src="assets/cards/card-photo.png" alt="AI 포토부스"/>
         </div>
         <div class="card-deco">
           <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
-            <circle cx="200" cy="200" r="180" stroke="#1246e8" stroke-width="1.2"/>
-            <circle cx="200" cy="200" r="120" stroke="#1246e8" stroke-width="1.2"/>
-            <circle cx="200" cy="200" r="60"  stroke="#1246e8" stroke-width="1.2"/>
-            <line x1="20" y1="200" x2="380" y2="200" stroke="#1246e8" stroke-width=".7"/>
-            <line x1="200" y1="20"  x2="200" y2="380" stroke="#1246e8" stroke-width=".7"/>
+            <circle cx="200" cy="200" r="180" stroke="#5044af" stroke-width="1.2"/>
+            <circle cx="200" cy="200" r="120" stroke="#5044af" stroke-width="1.2"/>
+            <circle cx="200" cy="200" r="60"  stroke="#5044af" stroke-width="1.2"/>
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#5044af" stroke-width=".7"/>
+            <line x1="200" y1="20"  x2="200" y2="380" stroke="#5044af" stroke-width=".7"/>
           </svg>
         </div>
         <div class="card-fade"></div>
@@ -273,28 +300,23 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
         </div>
       </div>
 
-      <!-- ─────────────────────────────────────
-           CARD 2 : 픽셀 서울
-           카드 이미지: assets/cards/card-rpg.jpg
-      ───────────────────────────────────────── -->
+      <!-- CARD 2 : 픽셀 서울 -->
       <div class="card" data-i="2">
         <div class="card-img ci-2">
-        
-            <img src="assets/cards/card-rpg.png" alt="픽셀 서울"/>
-        
+          <img src="assets/cards/card-rpg.png" alt="픽셀 서울"/>
         </div>
         <div class="card-deco">
           <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
-            <polygon points="150,10 280,230 20,230" stroke="#1246e8" stroke-width="1.2" fill="none"/>
-            <polygon points="150,55 250,220 50,220" stroke="#1246e8" stroke-width="1.2" fill="none"/>
-            <polygon points="150,100 220,210 80,210" stroke="#1246e8" stroke-width="1.2" fill="none"/>
+            <polygon points="150,10 280,230 20,230" stroke="#5044af" stroke-width="1.2" fill="none"/>
+            <polygon points="150,55 250,220 50,220" stroke="#5044af" stroke-width="1.2" fill="none"/>
+            <polygon points="150,100 220,210 80,210" stroke="#5044af" stroke-width="1.2" fill="none"/>
           </svg>
         </div>
         <div class="card-fade"></div>
         <div class="card-body">
           <div class="card-tag">Card 03 — 픽셀 서울</div>
           <div class="card-title">픽셀<br/><em>서울</em></div>
-          <div class="card-desc">성수동 플래그샵 픽셀 RPG →<br/>Toss 결제 + 현실 배송</div>
+          <div class="card-desc">성수동 플래그샵 픽셀 RPG →<br/>Stripe 결제 + 현실 배송</div>
           <button class="card-cta" data-href="rpg.html" data-label="픽셀 서울">
             게임 시작 <span class="cta-arr">→</span>
           </button>
@@ -317,26 +339,7 @@ header{position:absolute;top:0;left:0;right:0;z-index:200;height:64px;display:fl
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   IMAGE CONFIG
-   
-   ① 배경 이미지 (카드마다 다른 배경)
-      파일 위치: assets/backgrounds/bg-fashion.jpg 등
-      값이 빈 문자열('')이면 그라디언트 사용
-
-   ② 카드 이미지
-      파일 위치: assets/cards/card-fashion.jpg 등
-      값이 빈 문자열('')이면 그라디언트 사용
-      
-   ※ HTML 안의 img 주석도 함께 해제해야 카드 이미지가 동작합니다.
-      (JS CONFIG는 배경 이미지에만 영향)
-═══════════════════════════════════════════════ */
-const CONFIG = {
-  // 풀스크린 배경 이미지 — 카드가 바뀌어도 고정
-  // 예: 'assets/backgrounds/bg-main.jpg'
-  // 비워두면 카드별 그라디언트 사용
-  // background: 'assets/backgrounds/bg-main.png'
-};
+const CONFIG = {};
 
 /* CURSOR */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
@@ -355,6 +358,7 @@ document.getElementById('btn-enter').addEventListener('click',()=>{
 /* CAROUSEL */
 const CARDS=Array.from(document.querySelectorAll('.card'));
 const DOTS=document.querySelectorAll('.dot');
+const NAV_LINKS=document.querySelectorAll('.hd-nav a[data-goto]');
 const BG=document.getElementById('bg');
 const BG_OVERLAY=document.getElementById('bg-overlay');
 const N=3;
@@ -365,20 +369,24 @@ const LABELS=['AI FASHION CURATOR','AI PHOTOBOOTH','PIXEL SEOUL RPG'];
 
 function applyBackground(idx){
   if(CONFIG.background){
-    BG.style.backgroundImage = `url('${CONFIG.background}')`;
-    BG.className = '';
+    BG.style.backgroundImage=`url('${CONFIG.background}')`;
+    BG.className='';
     BG_OVERLAY.classList.add('on');
   } else {
-    BG.style.backgroundImage = '';
-    BG.className = BG_GRADIENT[idx];
+    BG.style.backgroundImage='';
+    BG.className=BG_GRADIENT[idx];
     BG_OVERLAY.classList.remove('on');
   }
 }
 
+function updateNav(idx){
+  NAV_LINKS.forEach(a=>{
+    a.classList.toggle('active', +a.dataset.goto === idx);
+  });
+}
+
 function render(){
-  const center=active;
-  const right=(active+1)%N;
-  const left=(active+2)%N;
+  const center=active, right=(active+1)%N, left=(active+2)%N;
   CARDS.forEach((c,i)=>{
     if(i===center)     c.setAttribute('data-pos','center');
     else if(i===right) c.setAttribute('data-pos','right');
@@ -388,6 +396,7 @@ function render(){
   DOTS.forEach((d,i)=>d.classList.toggle('on',i===active));
   document.getElementById('ctr-n').textContent=String(active+1).padStart(2,'0');
   document.getElementById('bottom-label').textContent=LABELS[active];
+  updateNav(active);
 }
 
 function go(dir){
@@ -403,7 +412,7 @@ render();
 document.getElementById('arr-l').addEventListener('click',()=>go(-1));
 document.getElementById('arr-r').addEventListener('click',()=>go(+1));
 DOTS.forEach((d,i)=>d.addEventListener('click',()=>{if(!busy&&i!==active){busy=true;active=i;render();setTimeout(()=>busy=false,720)}}));
-document.querySelectorAll('[data-goto]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const n=+a.dataset.goto;if(!busy&&n!==active){busy=true;active=n;render();setTimeout(()=>busy=false,720)}}));
+NAV_LINKS.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const n=+a.dataset.goto;if(!busy&&n!==active){busy=true;active=n;render();setTimeout(()=>busy=false,720)}}));
 window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(+1);if(e.key==='ArrowLeft')go(-1)});
 CARDS.forEach(c=>c.addEventListener('click',()=>{
   const pos=c.getAttribute('data-pos');

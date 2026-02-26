@@ -1,0 +1,116 @@
+{
+  "charm_s": {
+    "products": [
+      {
+        "id": "musinsa_5621602",
+        "name": "단추 포인트 목폴라 두꺼운 니트_차콜",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5621602",
+        "goods_no": "5621602"
+      },
+      {
+        "id": "musinsa_5619645",
+        "name": "단추 포인트 목폴라 두꺼운 니트_그레이",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5619645",
+        "goods_no": "5619645"
+      },
+      {
+        "id": "musinsa_5937674",
+        "name": "캔디 모노키니 원피스 수영복_블루",
+        "brand": "참스",
+        "price_krw": 30,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5937674",
+        "goods_no": "5937674"
+      },
+      {
+        "id": "musinsa_5444314",
+        "name": "오드리 리본 포인트 니트_베이지",
+        "brand": "참스",
+        "price_krw": 5,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5444314",
+        "goods_no": "5444314"
+      },
+      {
+        "id": "musinsa_5445352",
+        "name": "울 100% 라운드넥 니트 스웨터_블랙",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5445352",
+        "goods_no": "5445352"
+      },
+      {
+        "id": "musinsa_5321755",
+        "name": "클래식 무드 울 100% 반목 니트_아이보리",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5321755",
+        "goods_no": "5321755"
+      },
+      {
+        "id": "musinsa_5871768",
+        "name": "케이블 반팔니트 워머세트_아이보리",
+        "brand": "참스",
+        "price_krw": 15,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5871768",
+        "goods_no": "5871768"
+      },
+      {
+        "id": "musinsa_5634893",
+        "name": "로제 루즈핏 케이프 레이어드 티셔츠 2pcs세트_아이보리",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5634893",
+        "goods_no": "5634893"
+      },
+      {
+        "id": "musinsa_5871731",
+        "name": "세일러 카라 알파카 혼방 니트가디건_아이보리",
+        "brand": "참스",
+        "price_krw": 15,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5871731",
+        "goods_no": "5871731"
+      },
+      {
+        "id": "musinsa_5621595",
+        "name": "단추 포인트 목폴라 두꺼운 니트_베이지",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5621595",
+        "goods_no": "5621595"
+      },
+      {
+        "id": "musinsa_5445372",
+        "name": "울 100% 라운드넥 니트 스웨터_스카이블루",
+        "brand": "참스",
+        "price_krw": 10,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5445372",
+        "goods_no": "5445372"
+      },
+      {
+        "id": "musinsa_5877229",
+        "name": "레이어드 울혼방 가디건_차콜",
+        "brand": "참스",
+        "price_krw": 15,
+        "image_url": null,
+        "product_url": "https://www.musinsa.com/products/5877229",
+        "goods_no": "5877229"
+      }
+    ],
+    "crawled_at": "2026-02-26T06:10:24.928Z",
+    "brand_name": "참스"
+  }
+}
